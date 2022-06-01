@@ -9,8 +9,8 @@ Geo-Informatics and Space Technology Development Agency (Public Organization) - 
 </div></br>
 
 Project Plan
-- START : 20 MAY 2022
-- END : 31 MAY 2022
+- START : 31 MAY 2022
+- END : 31 JUL 2022
 
 Project Detial
 - Please Click to Coding... [Online Coding](https://sandcastle.cesium.com/).
