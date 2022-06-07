@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" /> 
+<head>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="cesiumContainer"></div>
+    <script>
+        // Get your token from https://cesium.com/ion/tokens
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjQ3MDZlOS1jMGQyLTRmMDctODhkZi1mMWI0MDFiYTllNTMiLCJpZCI6OTE4MjMsImlhdCI6MTY1NDU4MDQzNH0.qeZfFnvOr8ZhvCqR744X_wiSBoow1c8htCGHcx7BkW4';// const viewer = new Cesium.Viewer('cesiumContainer');
+
+        // STEP 4 CODE (replaces steps 2 and 3)
+        // Keep your `Cesium.Ion.defaultAccessToken = 'your_token_here'` line from before here. 
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain()
+        });
+        console.log("Hello world")
+    </script>
+</body>
+
+</html>
