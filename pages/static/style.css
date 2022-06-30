@@ -1,0 +1,10 @@
+html,
+body {
+  overflow: hidden;
+  margin: 10px;
+  padding: 0px;
+  height: 100%;
+}
+#cesiumContainer {
+  height: 70%;
+}

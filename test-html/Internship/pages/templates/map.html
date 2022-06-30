@@ -1,0 +1,109 @@
+{% load static %}
+{% load static %} 
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Markers Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'map.css' %}">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
+  <script src='//unpkg.com/leaflet-arc/bin/leaflet-arc.min.js'></script>
+</head>
+
+<script>
+  $(document).ready(function() {
+    var max_fields  =10;
+    var wrapper     = $(".input_field_wrap");
+    var add_button  = $(".add_field_button");
+
+    var x=1;
+    $(add_button).click(function(e){
+      e.preventDefault();
+      if(x<max_fields){
+        x++;
+        $(wrapper).append('<input type="text" name="newdata'+x+'" >')
+      }
+    })
+  })
+</script>
+
+<body>
+  
+  <form action = "" method = "post">
+    {% csrf_token %}
+    {% comment %} {{form}} {% endcomment %}
+    <div>
+    <label for="site">Choose a launchsite:</label>
+    <select id="site" name="site">
+      {% for k in data %}
+      <option value="{{ k.1 }}">{{ k.1 }}</option>
+      {% endfor %}
+    </select></div>
+    <input type="text" name="newdata1">
+    <button class='add_field_button'>Add More Fields</button>
+    <input type="submit"  value=Submit >
+    <div class="input_field_wrap"></div>
+
+  </form>
+
+  <div id="map"></div>
+  <script>
+    //initial view ([latitude,longitude], zoom level)
+
+    var map = L.map('map', {
+      center: [13.7563, 100.5018],
+      zoom: 5,
+      worldCopyJump: true
+    });
+
+    var osm =L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+
+    var rocketIcon = L.icon({
+      iconUrl: "{% static 'dj_app/media/rocket_icon.png' %}",
+
+      iconSize:    [50, 50],
+      iconAnchor:  [15, 30],
+      popupAnchor: [0, -25],
+  
+    });
+
+    {% for i in data %}
+
+    var marker = L.marker([{{ i.3 }}, {{ i.4 }}], {icon: rocketIcon}).addTo(map);
+    marker.bindPopup("<b>{{ i.1 }}</b>");
+
+    {% endfor %}
+
+
+    {% for n in notam %}
+    var polygon = L.polygon([
+      {% for i in n %}
+        [{{ i.0 }}, {{ i.1 }}],
+
+      {% endfor %} 
+      
+        ]).addTo(map);
+        polygon.setStyle({fillColor: '#FF0000'});
+        polygon.setStyle({color: '#FF0000'});   
+    {% endfor %}
+
+    {% comment %} https://github.com/mad-gooze/Leaflet.Arc#readme {% endcomment %}
+    
+    L.Polyline.Arc({{arc_coord.0}}, {{arc_coord.1}}, {
+      color: 'red',
+      vertices: 100
+    }).addTo(map);
+    
+
+
+  </script>
+
+</body>
+
+</html>

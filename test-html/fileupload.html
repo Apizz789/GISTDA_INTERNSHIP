@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+    <br>
+    <center>
+        <h1> | 【DEMO】Read Text File from Client. | </h1><br>
+    </center>
+    <hr>
+    <div class="p-3 row ">
+        <div class="p-3 col">
+
+            <from>
+
+                <input type="file" accept=".txt" onchange="showFile()">
+                <div id="show-text" class="p-3" style="height: 500px; width: 800px;"> </div>
+            </from>
+        </div>
+
+        <div class="p-3 col">
+            <from>
+                <input type="text" value="" id="show-file" name="" style="width:1200px; height: 200px"
+                    placeholder="Please enter your data here!">
+
+                <button type="button" class=" btn btn-warning" style="width:200px;" onClick="showAlert()"> Check data
+                </button>
+                <button type="button" class=" btn btn-success" style="width:200px;" onClick="
+                    window.location.href=window.location.href">Refresh Page</button>
+            </from>
+        </div>
+
+    </div>
+
+
+</body>
+
+
+<script>
+
+
+    var inputF = document.getElementById("show-file");
+
+
+    function showAlert() {
+        inputF.setAttribute('value', '     - No Data -     ');
+        alert("=== DATA ===\n\n" + inputF.value + "\n\nYour data is Correct!");
+    }
+
+
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        function showFile() {
+            var preview = document.getElementById('show-text');
+            var showfile = document.getElementById('show-file');
+            var file = document.querySelector('input[type=file]').files[0];
+            var reader = new FileReader()
+
+            var textFile = /text.*/;
+
+            if (file.type.match(textFile)) {
+                reader.onload = function (event) {
+                    preview.innerHTML = event.target.result.replace(/<(\/*?)(?!(em|p|br\s*\/|strong))\w+?.+?>/gim, '');
+                    showfile.value = event.target.result.match(/[N]\d{6}[E]\d{7}/g, '');
+                    array.forEach(element => {
+                        
+                    });
+
+
+                }
+            } else {
+                preview.innerHTML = "<h1 style='color:red;'><span  class='error'>It doesn't seem to be a text file!</span></h1>";
+            }
+            reader.readAsText(file);
+        }
+
+    } else {
+        alert("Your browser is too old to support HTML5 File API");
+    }
+</script>
+
+
+</html>
+<!-- 

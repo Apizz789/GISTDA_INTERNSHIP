@@ -1,0 +1,46 @@
+{% load static %} 
+<p>
+  <img src="{% static 'dj_app/media/zircon-01.jpg' %}" alt='home'  width=150 px/>
+</p>
+<p>Date/Time: <span id="datetime"></span></p>
+
+<script>
+  var dt = new Date();
+  document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
+  </script>
+
+
+<script>
+  setTimeout('location.reload()', 1800000)
+  </script>
+
+<table style="border: 1px solid black;">
+    <tr>
+      <th style="width:550px">TLE</th>
+      <th>Time</th>
+      <th>Coordinate</th>
+      <th>speed</th>
+    </tr>
+
+      {% for i in data2 %}
+      <tr >
+          <th align="left"><pre>{{ i.0 }}</pre></th>
+          <th></th>
+          <th></th>
+          <th></th>
+      </tr>
+
+      <tr>
+        <th align="left"><pre>{{ i.1 }}</pre></th>
+        <th align="left">{{ i.2 }}</th>
+        <th align="left">{{ i.3 }}</th>
+        <th align="left">{{ i.4 }}</th>
+      </tr> 
+      <tr>
+        <th </th>
+        <th></th>
+        <th></th>
+      </tr> 
+      {% endfor %}
+
+  </table>

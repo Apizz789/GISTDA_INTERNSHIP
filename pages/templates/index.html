@@ -1,0 +1,74 @@
+{% load static %}
+
+<head>
+  <meta charset="utf-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <div>
+    <p>
+      <!-- CSS only -->
+      <center><img src="{% static 'dj_app/media/zircon-01.jpg' %}" alt='home' width=300 height="150" px /></center>
+    </p>
+  </div>
+
+  <div>
+    <center>
+      <p>Date/Time: <span id="datetime"></span></p>
+    </center>
+  </div>
+
+  <script>
+    var dt = new Date();
+    document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
+  </script>
+
+
+  <script>
+    setTimeout('location.reload()', 1800000)
+  </script>
+
+  <div>
+    <table style="border: 1px solid black;">
+      <tr>
+        <th style="width:auto">TLE</th>
+        <th >TIME</th>
+        <th>COORDINATE</th>
+        <th>SPEED</th>
+      </tr>
+
+      {% for i in data2 %}
+      <tr>
+        <th align="left">
+          <pre>{{ i.0 }}</pre>
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+
+      <tr>
+        <th align="left">
+          <pre>{{ i.1 }}</pre>
+        </th>
+        <th align="left">{{ i.2 }}</th>
+        <th align="left">{{ i.3 }}</th>
+        <th align="left">{{ i.4 }}</th>
+      </tr>
+      <tr>
+        <th </th>
+        <th></th>
+        <th></th>
+      </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+
+</body>

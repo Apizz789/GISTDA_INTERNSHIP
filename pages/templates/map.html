@@ -1,0 +1,925 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+
+<head>
+  <title>GISTDA</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'map.css' %}">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"> </script>
+  <script src='//unpkg.com/leaflet-arc/bin/leaflet-arc.min.js'></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://sandcastle.cesium.com/Sandcastle-header.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+</head>
+
+
+<script>
+  $(document).ready(function () {
+    var max_fields = 10;
+    var wrapper = $(".input_field_wrap");
+    var add_button = $(".add_field_button");
+    var x = 1;
+
+    $(add_button).click(function (e) {
+      e.preventDefault();
+      if (x < max_fields) {
+        x++;
+        $(wrapper).append('<input class="form-control row-fluid " value="" id="show-file" style="width: 500px; overflow-y: scroll;"type="text" name="newdata' + x + '" placeholder="Input your Coordinates here." required>')
+      }
+      if (x === 10) {
+        alert("You mustn't have more than 10 fields.")
+      }
+    })
+  })
+</script>
+
+
+<style>
+ h1, h3, label {
+  color: #ffffff;
+}
+
+</style>
+
+
+<body>
+
+  <div>
+    <div  class="m-2" style="position: absolute; top: 0; right: 0;  left:0; z-index:295; border-radius: 20px; background-image: linear-gradient(90deg, rgba(24, 247, 27, 0.44) 0%, rgba(24, 161, 247, 1) 100%); width: 800px; height:80px">
+      <h1 class="p-3 m-0 text-center">【DEMO】LAUNCHER MAP | GISTDA</h1>
+    </div>
+
+
+  {% comment %} <form  method="POST"> {% endcomment %}
+
+    <div class="hamburger-menu" style="position: absolute; top: 0; right: 0;  left:0; z-index:296;">
+      <input id="menu__toggle" type="checkbox" />
+      <label class="mt-3 menu__btn" for="menu__toggle">
+        <span></span>
+      </label>
+      <ul class="menu__box">
+
+        <center>
+          <div  class="m-3 p-3" style="position: fixed; z-index:300; width: 600px; border: 3px dotted #c800ff; border-radius: 20px; background-image: linear-gradient(90deg, rgba(24, 247, 27, 0.44) 0%, rgba(24, 161, 247, 0.52) 100%); ">
+          
+          <div style="width: 300px;">
+            <img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/logo-footer.png" alt="HTML tutorial" style="width:300px;height:125px;">
+      
+          </div>
+            <div  class="mt-3">
+              {% csrf_token %}
+      
+              <label for="site"><h3>Choose a launchsite : </h3></label>
+      
+              <select class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                id="site" name="site" onchange="get_launchsite()" >
+                
+                {% comment %} {% for k in data %}
+                <option value="{{ k.1 }}">{{k.1}}</option>
+                {% endfor %} {% endcomment %}
+                <option value="Alcantara Launch Center">Alcantara Launch Center</option>
+                <option value="Baikonur Cosmodrome (Tyuratam)">Baikonur Cosmodrome (Tyuratam)</option>
+                <option value="Dombarovskiy ICBM Base">Dombarovskiy ICBM Base</option>
+                <option value="Edwards AFB">Edwards AFB</option>
+                <option value="Gran Canaria, Gando AFB">Gran Canaria, Gando AFB</option>
+                <option value="Guiana Space Center (Kourou)">Guiana Space Center (Kourou)</option>
+                <option value="Hammaguira">Hammaguira</option>
+                <option value="Indian Ocean Platform (San Marco)">Indian Ocean Platform (San Marco)</option>
+                <option value="Jiuquan SLC (Shuang Cheng Tzu)">Jiuquan SLC (Shuang Cheng Tzu)</option>
+                <option value="Kagoshima Space Center (Uchinoura)">Kagoshima Space Center (Uchinoura)</option>
+                <option value="Kapustin Yar MSC">Kapustin Yar MSC</option>
+                <option value="Kennedy Space Center">Kennedy Space Center</option>
+                <option value="Kodiak Launch Complex">Kodiak Launch Complex</option>
+                <option value="Mid-Atlantic Regional Spaceport">Mid-Atlantic Regional Spaceport</option>
+                <option value="Naval Ordnance Test S.(China Lake)">Naval Ordnance Test S.(China Lake)</option>
+                <option value="Plesetsk Cosmodrome">Plesetsk Cosmodrome</option>
+                <option value="Poker Flat Research Center">Poker Flat Research Center</option>
+                <option value="Sea Launch">Sea Launch</option>
+                <option value="Semnan">Semnan</option>
+                <option value="Sohae Satellite Launching Station">Sohae Satellite Launching Station</option>
+                <option value="Sriharikota Space Center">Sriharikota Space Center</option>
+                <option value="Svobodniy">Svobodniy</option>
+                <option value="Taiyuan SLC (Wuzhai)">Taiyuan SLC (Wuzhai)</option>
+                <option value="Tanegashima Space Center">Tanegashima Space Center</option>
+                <option value="Tonghae (Musudan Ri)">Tonghae (Musudan Ri)</option>
+                <option value="US Army Kwajalein Atoll">US Army Kwajalein Atoll</option>
+                <option value="Vandenberg AFB (WTR)">Vandenberg AFB (WTR)</option>
+                <option value="Wallops Flight Facility">Wallops Flight Facility</option>
+                <option value="Woomera Rocket Range">Woomera Rocket Range</option>
+                <option value="Xichang Satellite Launch Center">Xichang Satellite Launch Center</option>
+                <option value="Yavne Launch Facility (Palmachim)">Yavne Launch Facility (Palmachim)</option>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </select>
+      
+          
+              <div class="mt-3">
+              <h3>Unit Testing.</h3>
+      
+              <input class="form-control row-fluid" id="show-notam" style="width: 550px; overflow-y: scroll;" type="text"
+                name="newdata1" placeholder="Input your Coordinates here." required>
+              </div>
+            
+              <div class="mt-3">
+              <h3> Input your data.* </h3>
+      
+              <textarea class="form-control" id="show-file" name="newdata" type="text"
+                style="width: 550px; overflow-y: scroll;" cols="60" rows="5" align="left"
+                placeholder="Input your Coordinates here."></textarea> 
+              </div>
+      
+              <div class="mt-3">
+                <h3 class="p-3">Or Drag data</h3>
+                <div class="file-upload-wrapper">
+                  <input type="file" accept=".txt" onchange="showFile()" id="input-file-now-custom-2"
+                    class="p-3 file-upload btn btn-secondary " style="width: 500px;" data-height="20" />
+                </div> 
+              </div>
+      
+              {% comment %} <div class="m-3 input_field_wrap"></div> {% endcomment %}
+              <div class="m-3">
+                {% comment %} <button class='mt-3 add_field_button btn btn-outline-primary' style="width: 170px;">Add More
+                  Fields</button> {% endcomment %}
+                <button class="mt-3 btn btn-success" style="width: 170px;" type="submit" value= "submit">Submit</button> 
+      
+                <button class="mt-3 btn btn-danger" style="width: 170px;" onClick="TestMyfunction()">Reset
+                  Fields</button>
+      
+      
+                <button class="mt-3 btn btn-outline-info" style="width: 200px;" onClick="NOTAM_Optimize()">Tests Polygon Fields</button>
+                <button class="mt-3 btn btn-outline-warning" style="width: 200px;" onClick="get_launchsite()">Tests Launchsite Fields</button>
+                <button class="mt-3 btn btn-outline-light" style="width: 200px;" onClick="DrawModel()">Random PolyLine Fields</button>
+                <button class="mt-3 btn btn-outline-light" style="width: 200px;" onClick="clearfunction()">Reset PolyLine Fields</button>
+                <button class="mt-3 btn btn-secondary" style="width: 200px;" onClick="UnitTestfunction()">PROGRAM TEST</button>
+
+                <button class="mt-3 btn btn-secondary" style="width: 200px;" onClick="InputTest()">NOTAM TEST</button>
+
+                <button class="mt-3 btn btn-secondary" style="width: 200px;" onClick="setDefaultValues()">ZOOM TEST</button>
+
+                
+                
+                
+              </div>
+      
+      
+          </div>
+        </center>
+          
+      
+
+      </ul>
+    </div>
+</div>
+
+  <div class="">
+    <center>
+      <div id="cesiumContainer" style="position: absolute; top: 0; right: 0;  left:0; z-index:290; height: 1080px; width: auto" ></div>
+    </center>
+  </div>
+
+{% comment %} </form> {% endcomment %}
+
+<style>
+  #menu__toggle {
+    opacity: 0;
+  }
+  #menu__toggle:checked + .menu__btn > span {
+    transform: rotate(45deg);
+  }
+  #menu__toggle:checked + .menu__btn > span::before {
+    top: 0;
+    transform: rotate(0deg);
+  }
+  #menu__toggle:checked + .menu__btn > span::after {
+    top: 0;
+    transform: rotate(90deg);
+  }
+  #menu__toggle:checked ~ .menu__box {
+    left: 0 !important;
+  }
+  .menu__btn {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .menu__btn > span,
+  .menu__btn > span::before,
+  .menu__btn > span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-color: #ffffff;
+    transition-duration: .50s;
+  }
+  .menu__btn > span::before {
+    content: '';
+    top: -8px;
+  }
+  .menu__btn > span::after {
+    content: '';
+    top: 8px;
+  }
+  .menu__box {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    z-index: 9999;
+    margin: 0;
+    padding: 80px 0;
+    list-style: none;
+    background-color: #ECEFF1;
+    opacity: 0.8;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
+    transition-duration: .75s;
+  }
+  .menu__item {
+    display: inline-block;
+    padding: 12px 24px;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition-duration: .75s;
+    width: 170px;
+  }
+  .menu__item:hover {
+    background-color: #CFD8DC;
+  }
+
+</style>
+
+
+
+  <div class="context">
+    <hr>
+    <center>
+      <h1>GISTDA &#169; 2022</h1>
+    </center>
+  </div>
+
+</body>
+
+<script>
+
+  var inputF = document.getElementById("show-file");
+  function showAlert() {
+    inputF.setAttribute('value', '     - No Data -     ');
+    alert("=== DATA ===\n\n" + inputF.value + "\n\nYour data is Are here!");
+  }
+
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+    function showFile() {
+      // var preview = document.getElementById('show-text');
+      var showfile = document.getElementById('show-file');
+      var file = document.querySelector('input[type=file]').files[0];
+      var reader = new FileReader()
+      var textFile = /text.*/;
+
+      if (file.type.match(textFile)) {
+        reader.onload = function (event) {
+          showfile.value = event.target.result.match(/[N,S]\d{6}[E,W]\d{7}|(\+)/g, '');
+
+        }
+      } else {
+        preview.innerHTML = "<h1 style='color:red;'><span  class='error'>It doesn't seem to be a text file!</span></h1>";
+      }
+      reader.readAsText(file);
+    }
+  } else {
+    alert("Your browser is too old to support HTML5 File API.");
+  }
+  
+</script>
+
+
+<script>
+  // https://www.latlong.net/ Latitude and Longitude Finder -> GPS Coordinates
+  // DMS to Latitude and Longitude = Degrees + (Minutes/60) + (Seconds/3600)
+
+  // Token for cesium 3D
+  Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjQ3MDZlOS1jMGQyLTRmMDctODhkZi1mMWI0MDFiYTllNTMiLCJpZCI6OTE4MjMsImlhdCI6MTY1NDU4MDQzNH0.qeZfFnvOr8ZhvCqR744X_wiSBoow1c8htCGHcx7BkW4';
+  // Plot Focus THAILAND.
+  Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
+  var viewer = new Cesium.Viewer('cesiumContainer');
+
+
+  var dataSource = Cesium.GeoJsonDataSource.load('https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/GEO_JSON/TH_Json1.json',
+  {
+    stroke: Cesium.Color.HOTPINK,
+    fill: Cesium.Color.PINK.withAlpha(0.5),
+    strokeWidth: 3,
+  });
+
+   dataSource.then(function(data) {
+      var dataProvicesinThailand = []
+      // Change the arcType to GEODESIC, which is what it was in CesiumJS 1.53.
+      for (var i = 0; i < data.entities.values.length; i++) {
+          var entity = data.entities.values[i];
+          if (Cesium.defined(entity.polygon)) {
+              entity.polygon.arcType = Cesium.ArcType.GEODESIC;
+          }
+          var name_Provices = data.entities.values[i].properties._PV_TN._value;
+          dataProvicesinThailand.push(name_Provices);
+          
+      }
+      console.log( new Set(dataProvicesinThailand) ) 
+    
+      
+  }); 
+  
+  viewer.dataSources.add(dataSource);
+
+
+
+
+  viewer.scene.debugShowFramesPerSecond = true;
+
+
+  let sqllatlong = [];
+
+  {% comment %} {% for i in data %}
+  sqllatlong.push([{{ i.3 }},{{ i.4 }},"{{ i.1 }}"]);
+  {% endfor %} {% endcomment %}
+
+  // ---------------------------------------------------------------------------------------------------
+  // Offline Mode
+   sqllatlong.push([-2.3,-44.4,"Alcantara Launch Center"],
+  [45.6,63.4,"Baikonur Cosmodrome (Tyuratam)"],
+  [51,-58,"Dombarovskiy ICBM Base"],
+  [34.5,-117.5,"Edwards AFB"],
+  [27.6,15.2,"Gran Canaria, Gando AFB"],
+  [5.2,-52.8,"Guiana Space Center (Kourou)"],
+  [30.9,-3.1,"Hammaguira"],
+  [-2.9,40.3,"Indian Ocean Platform (San Marco)"],
+  [41.3,100.3,"Jiuquan SLC (Shuang Cheng Tzu)"],
+  [31.2,131.1,"Kagoshima Space Center (Uchinoura)"],
+  [48.6,46.3,"Kapustin Yar MSC"],
+  [28.5,-81,"Kennedy Space Center"],
+  [57.6,-152.2,"Kodiak Launch Complex"],
+  [37.85,-75.46,"Mid-Atlantic Regional Spaceport"],
+  [35.4,117.4,"Naval Ordnance Test S.(China Lake)"],
+  [62.8,40.6,"Plesetsk Cosmodrome"],
+  [65.1,-147.5,"Poker Flat Research Center"],
+  [0,-154,"Sea Launch"],
+  [35.234338,53.920601,"Semnan"],
+  [39.66,124.71,"Sohae Satellite Launching Station"],
+  [13.7259,80.2266,"Sriharikota Space Center"],
+  [51.8,128.4,"Svobodniy"],
+  [37.8,111.5,"Taiyuan SLC (Wuzhai)"],
+  [30.4,130.6,"Tanegashima Space Center"],
+  [40.5,129.5,"Tonghae (Musudan Ri)"],
+  [9.0494,-167.7432,"US Army Kwajalein Atoll"],
+  [34.7,-120.6,"Vandenberg AFB (WTR)"],
+  [37.9,-75.4,"Wallops Flight Facility"],
+  [-31.1,136.6,"Woomera Rocket Range"],
+  [28.2,102,"Xichang Satellite Launch Center"],
+  [31.9,34.7,"Yavne Launch Facility (Palmachim)"]) 
+  // ---------------------------------------------------------------------------------------------------
+
+  function test() {
+    console.log("LOVE LOVE")
+  }
+
+  DrawModel();
+  async function DrawModel() {
+
+    const tesstt= [];
+
+
+
+
+    {% comment %} {% for i in data %}
+    tesstt.push([{{i.3}},{{i.4}},"{{i.1}}"]) ;
+    {% endfor %}  {% endcomment %}
+
+    // ---------------------------------------------------------------------------------------------------
+    // Offline Mode
+    tesstt.push([-2.3,-44.4,"Alcantara Launch Center"],
+    [45.6,63.4,"Baikonur Cosmodrome (Tyuratam)"],
+    [51,-58,"Dombarovskiy ICBM Base"],
+    [34.5,-117.5,"Edwards AFB"],
+    [27.6,15.2,"Gran Canaria, Gando AFB"],
+    [5.2,-52.8,"Guiana Space Center (Kourou)"],
+    [30.9,-3.1,"Hammaguira"],
+    [-2.9,40.3,"Indian Ocean Platform (San Marco)"],
+    [41.3,100.3,"Jiuquan SLC (Shuang Cheng Tzu)"],
+    [31.2,131.1,"Kagoshima Space Center (Uchinoura)"],
+    [48.6,46.3,"Kapustin Yar MSC"],
+    [28.5,-81,"Kennedy Space Center"],
+    [57.6,-152.2,"Kodiak Launch Complex"],
+    [37.85,-75.46,"Mid-Atlantic Regional Spaceport"],
+    [35.4,117.4,"Naval Ordnance Test S.(China Lake)"],
+    [62.8,40.6,"Plesetsk Cosmodrome"],
+    [65.1,-147.5,"Poker Flat Research Center"],
+    [0,-154,"Sea Launch"],
+    [35.234338,53.920601,"Semnan"],
+    [39.66,124.71,"Sohae Satellite Launching Station"],
+    [13.7259,80.2266,"Sriharikota Space Center"],
+    [51.8,128.4,"Svobodniy"],
+    [37.8,111.5,"Taiyuan SLC (Wuzhai)"],
+    [30.4,130.6,"Tanegashima Space Center"],
+    [40.5,129.5,"Tonghae (Musudan Ri)"],
+    [9.0494,-167.7432,"US Army Kwajalein Atoll"],
+    [34.7,-120.6,"Vandenberg AFB (WTR)"],
+    [37.9,-75.4,"Wallops Flight Facility"],
+    [-31.1,136.6,"Woomera Rocket Range"],
+    [28.2,102,"Xichang Satellite Launch Center"],
+    [31.9,34.7,"Yavne Launch Facility (Palmachim)"])  
+    // ---------------------------------------------------------------------------------------------------
+
+    console.log(tesstt);
+
+    const random = Math.floor(Math.random() * tesstt.length);
+
+    console.log("| <RANDOM DATA> | "+ " Launchsite : "+ tesstt[random][2] +" Latitude : " +tesstt[random][0]+ " Longitude : "+tesstt[random][1]);
+
+    var destination_coordinate = [100.5018, 13.7563];
+
+    var coord_A = [ destination_coordinate[1],destination_coordinate[0]];
+    var coord_B = [tesstt[random][0],tesstt[random][1]];
+
+    console.log(coord_A)
+    console.log("From C: "+coord_A+" To D: "+coord_B);
+
+    
+
+    const resource = await Cesium.IonResource.fromAssetId(1121948);
+    clearfunction();
+
+    var zeroHeight = 0.0;
+    var startHeight = 1500.0;
+    var endHeight = 1500000.0;
+
+    for (let k = 0; k < sqllatlong.length; k++) {
+
+
+      const polyLinePlot= viewer.entities.add({
+        name : 'Line to '+ endHeight +"M.",
+        id : 'Line'+[k],
+        position : Cesium.Cartesian3.fromDegrees(coord_B[1], coord_B[0], endHeight),
+        polyline : {
+            positions: [
+                Cesium.Cartesian3.fromDegrees(coord_B[1], coord_B[0], zeroHeight),
+                Cesium.Cartesian3.fromDegrees(coord_B[1], coord_B[0], endHeight)
+            ],
+            width : new Cesium.ConstantProperty(2),
+            material : Cesium.Color.RED,
+            followSurface : new Cesium.ConstantProperty(false)
+        }
+    });
+
+       const polyLineDistance = viewer.entities.add({
+        name: "PolyLine Distance THAILAND to ETC.",
+        id: "PolyLine"+[k],
+
+        polyline: {
+          // This callback updates positions each frame.
+          positions: Cesium.Cartesian3.fromDegreesArrayHeights([coord_A[1], coord_A[0],startHeight, coord_B[1], coord_B[0],endHeight]),
+          material: Cesium.Color.RED,
+          width: 2,
+         
+        },
+      });   
+
+      const objectEntity = viewer.entities.add({
+        name: sqllatlong[k][2],
+        model: { uri: resource, minimumPixelSize: 80, maximumPixelSize: 80 },
+        position: Cesium.Cartesian3.fromDegrees(sqllatlong[k][1], sqllatlong[k][0], 0),
+        
+      });  
+
+      const CircleoutlineOnly = viewer.entities.add({
+        name: sqllatlong[k][2],
+        id: "Circle"+[k],
+        position: Cesium.Cartesian3.fromDegrees(sqllatlong[k][1], sqllatlong[k][0], 0),
+        ellipse: {
+          semiMinorAxis: 200000.0,
+          semiMajorAxis: 200000.0,
+          material: Cesium.Color.GREEN.withAlpha(0.3),
+          outline: true, // height must be set for outline to display
+          outlineWidth: 10,
+          outlineColor: Cesium.Color.YELLOW,
+          
+        },
+        
+        label: {
+          text: sqllatlong[k][2],
+          font: '10pt monospace',
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          outlineWidth: 2,
+          verticalOrigin: Cesium.VerticalOrigin.TOP,
+          pixelOffset: new Cesium.Cartesian2(0, 32)
+          
+          }, 
+      });
+
+      
+      
+    }  
+
+    console.log("From: " + coord_A + " Destination: " + coord_B);
+   
+  }
+
+  var options = [];
+  var options_testInput = [];
+
+ 
+  // manage function
+
+  var testCoordNotam = [];
+
+  {% for n in notam %}
+  {% for i in n %}
+  testCoordNotam.push({
+    long_notam: {{ i.1 }},
+    latt_notam : {{ i.0 }},
+      })
+  {% endfor %}
+  {% endfor %}
+
+  var testPolygon = viewer.entities.add(new Cesium.Entity());
+  testPolygon._id = "PolygonSet";
+  var sum_global_coordinate = [];
+
+  function NOTAM_Optimize() {
+    TestMyfunction();
+
+   
+    let testinput1 = document.getElementById("show-notam").value;
+    console.log(testinput1);
+
+    var testinput_splited = testinput1.split("+");
+    console.log(testinput_splited);
+
+    for (let t = 0; t < (testinput_splited.length); t++) {
+      let polygon_list = testinput_splited[t].split(' ').filter(function (i) { return i })
+      {% comment %} console.log(polygon_list); {% endcomment %}
+      var sum_coordinate = []
+
+      {% comment %} if (polygon_list.length < 3) {
+        console.log("This Polygon : " + polygon_list + " Must more than 2 angles.");
+        alert("This Polygon : " + polygon_list + " Must more than 2 angles.");
+        break;
+      }
+      else if (polygon_list.length >= 3) {
+        console.log(polygon_list);
+
+      } {% endcomment %}
+
+
+      console.log( "Poloygon Number : " + (t+1))
+
+      for (let u = 0; u < polygon_list.length; u++) {
+
+        let upolygon = polygon_list[u];
+
+        console.log("NOTAM : " + upolygon);
+
+        // Decimal degrees = Degrees + (Minutes/60) + (Seconds/3600)
+
+        var DMS_Latt = 0;
+        var DMS_Long = 0;
+        if (upolygon[7] === "E") {
+          DMS_Long = parseFloat(upolygon[8] + upolygon[9] + upolygon[10]) + (parseFloat(upolygon[11] + upolygon[12]) / 60) + (parseFloat(upolygon[13] + upolygon[14]) / 3600);
+          console.log("Longitude : " + DMS_Long);
+        }
+        else if (upolygon[0] === "W") {
+          DMS_Long = -1 * (parseFloat(upolygon[8] + upolygon[9] + upolygon[10]) + (parseFloat(upolygon[11] + upolygon[12]) / 60) + (parseFloat(upolygon[13] + upolygon[14]) / 3600));
+          console.log("Longitude : " + DMS_Long);
+        }
+        sum_coordinate.push(DMS_Long)
+
+        if (upolygon[0] === "N") {
+          DMS_Latt = parseFloat(upolygon[1] + upolygon[2]) + (parseFloat(upolygon[3] + upolygon[4]) / 60) + (parseFloat(upolygon[5] + upolygon[6]) / 3600);
+          console.log("Latitude : " + DMS_Latt);
+        }
+        else if (upolygon[0] === "S") {
+          DMS_Latt = -1 * (parseFloat(upolygon[1] + upolygon[2]) + (parseFloat(upolygon[3] + upolygon[4]) / 60) + (parseFloat(upolygon[5] + upolygon[6]) / 3600));
+          console.log("Latitude : " + DMS_Latt);
+        }
+        sum_coordinate.push(DMS_Latt)
+
+
+       
+        var Latitude = DMS_Latt;
+        var Longitude = DMS_Long;
+      }
+      
+      console.log(sum_coordinate);
+      sum_global_coordinate.push(sum_coordinate);
+      
+
+      viewer.entities.add({
+        parent: testPolygon,
+        name: "Red Red RUN!! No."+[t],
+        id: "polypolyjaa"+[t],
+      
+        polygon: {
+          hierarchy: Cesium.Cartesian3.fromDegreesArray(sum_coordinate),
+          material: Cesium.Color.RED.withAlpha(0.5),
+          height: 0.0,
+          outline: true,
+          outlineWidth: 50,
+          outlineColor: Cesium.Color.RED,
+        },
+        zIndex: 1,
+      });
+
+  
+
+    }
+
+    console.log(sum_global_coordinate);
+  }
+  
+  
+  function TestMyfunction() {
+    var countNum1 = 10;
+    for(let countPoly = 0; countPoly < countNum1 ; countPoly++){
+      viewer.entities.removeById("polypolyjaa"+[countPoly]);
+    }
+    console.log("Success Clear All Polygon")
+   }
+
+   
+   var temp_location_launchsite = [];
+
+   function clearfunction(){
+    var countNum2 = 50;
+    for(let countPoly2 = 0; countPoly2 < countNum2 ; countPoly2++){
+      viewer.entities.removeById("PolyLine"+[countPoly2]);
+      viewer.entities.removeById("Line"+[countPoly2]);
+      viewer.entities.removeById("centroidId"+[countPoly2]);
+    } 
+    viewer.entities.removeById("polylinId");
+    viewer.entities.removeById("LineId");
+
+
+    console.log("Success Clear All Polygon Line")
+   }
+
+ 
+  var preview = document.getElementById('show-text');
+
+  function get_launchsite() {
+    temp_location_launchsite = [];
+    var name_select_input = document.getElementById('site').value;
+    var temp_data_launchsite = [];
+
+    {% comment %} {% for i in data %}
+     temp_data_launchsite.push(["{{i.1}}",{{i.3}},{{i.4}}]) ;
+    {% endfor %} {% endcomment %}
+    
+    for (let n = 0; n < sqllatlong.length; n++) {
+      temp_data_launchsite.push([sqllatlong[n][2],sqllatlong[n][0],sqllatlong[n][1]]) ;
+    }
+    
+    
+      {% comment %} {% for i in data %}
+      if(name_select_input === "{{i.1}}"){
+        temp_location_launchsite.push({{i.4}},{{i.3}});
+        console.log("ADD 【{{i.1}}】: "+ temp_location_launchsite);
+      }
+      {% endfor %} {% endcomment %}
+
+      for (let i = 0; i < sqllatlong.length; i++) {
+        if(name_select_input === sqllatlong[i][2]){
+          temp_location_launchsite.push(sqllatlong[i][1],sqllatlong[i][0]);
+          console.log("ADD 【"+sqllatlong[i][2]+"】: "+ temp_location_launchsite);
+        }
+      }
+      
+
+
+
+
+  }
+  
+
+  
+  var to_centroid = [];
+  var temp_to_centroid = [];
+  var to_centroid_list = [];
+
+  function UnitTestfunction(){
+
+    
+    temp_to_centroid=[];
+    {% comment %} console.log("TEMP MEE MAI : "+ temp_to_centroid ) {% endcomment %}
+   for(let a = 0; a<sum_global_coordinate.length; a++){
+    
+    to_centroid = [];
+    to_centroid_list = [];
+
+      for(let b = 0 ; b < sum_global_coordinate[a].length/2; b++){
+        to_centroid.push([sum_global_coordinate[a][b*2],sum_global_coordinate[a][(b*2)+1]])
+      }
+     
+    to_centroid_list = find_Centroid(to_centroid)
+    temp_to_centroid.push(to_centroid_list)
+     
+    } 
+
+    console.log(temp_to_centroid)
+    console.log(to_centroid_list)
+    
+    for (let c = 0 ; c < temp_to_centroid.length ; c++){
+      console.log(temp_to_centroid[c])
+    }
+
+
+    sum_global_coordinate = [];
+
+
+    clearfunction()
+    destination_coordinate = find_Centroid(to_centroid)
+    
+    temp_r_count = Math.floor(Math.random() * 10000) + 1;
+
+    var zeroHeight = 0.0;
+    var startHeight = 1500.0;
+    var endHeight = 1500000.0;
+
+    const polyLinePlot= viewer.entities.add({
+      name : "Line to M.",
+      id : 'LineId',
+      position : Cesium.Cartesian3.fromDegrees(temp_location_launchsite[0], temp_location_launchsite[1], endHeight),
+      polyline : {
+          positions: [
+              Cesium.Cartesian3.fromDegrees(temp_location_launchsite[0], temp_location_launchsite[1], zeroHeight),
+              Cesium.Cartesian3.fromDegrees(temp_location_launchsite[0], temp_location_launchsite[1], endHeight)
+          ],
+          width : new Cesium.ConstantProperty(2),
+          material : Cesium.Color.RED,
+          followSurface : new Cesium.ConstantProperty(false)
+      }
+  });
+    
+    var polyLineDistance2 = viewer.entities.add({
+      name: "PolyLine Distance THAILAND to ETC.",
+      id: "polylinId",
+      polyline: {
+        positions: Cesium.Cartesian3.fromDegreesArrayHeights([destination_coordinate[0], destination_coordinate[1],startHeight,temp_location_launchsite[0],temp_location_launchsite[1],endHeight]),
+        material: Cesium.Color.fromRandom({ alpha: 1.0 }),
+        width: 3,
+      },
+    });  
+
+
+    for (let d = 0 ; d < temp_to_centroid.length ; d++){
+
+      var pointCentroid = viewer.entities.add({
+        name : "CENTROID.",
+        id: "centroidId"+[d],
+        position: Cesium.Cartesian3.fromDegrees(temp_to_centroid[d][0], temp_to_centroid[d][1]),
+        point: {
+          show: true, // default
+          color: Cesium.Color.SKYBLUE, // default: WHITE
+          pixelSize: 10, // default: 1
+          outlineColor: Cesium.Color.YELLOW, // default: BLACK
+          outlineWidth: 3, // default: 0
+          
+        },
+        zIndex: 50 ,
+      });
+      
+    }
+    
+
+   
+  }
+
+  function InputTest(){
+    NOTAM_Optimize()
+    UnitTestfunction()
+    
+  }
+
+  function setDefaultValues(){
+    var t=3
+    {% comment %} viewer.camera.flyTo({
+      destination : Cesium.Cartesian3.fromDegrees(46.3+t,48.6-t,500000), 
+      orientation : {
+        heading : Cesium.Math.toRadians(0.0),
+        pitch : Cesium.Math.toRadians(-25.0),
+      }
+
+    }); {% endcomment %}
+    viewer.zoomTo(
+      viewer.entities,
+      new Cesium.HeadingPitchRange(
+        Cesium.Math.toRadians(90),
+        Cesium.Math.toRadians(0),
+        8500
+      )
+    );
+
+
+  }
+
+
+
+  // Javascript implementation of the approach
+
+   
+  function find_Centroid(polygon_list){
+      let ans = new Array(2);
+      ans.fill(0);
+         
+      let n = polygon_list.length;
+      let signedArea = 0;
+         
+      // For all vertices
+      for (let i = 0; i < n; i++)
+      {
+             
+          let x0 = polygon_list[i][0], y0 = polygon_list[i][1];
+          let x1 = polygon_list[(i + 1) % n][0], y1 = polygon_list[(i + 1) % n][1];
+                                 
+          // Calculate value of A
+          // using shoelace formula
+          let A = (x0 * y1) - (x1 * y0);
+          signedArea += A;
+             
+          // Calculating coordinates of
+          // centroid of polygon
+          ans[0] += (x0 + x1) * A;
+          ans[1] += (y0 + y1) * A;
+      }
+     
+      signedArea *= 0.5;
+      ans[0] = (ans[0]) / (6 * signedArea);
+      ans[1]= (ans[1]) / (6 * signedArea);
+     
+      return ans;
+  }
+   
+  // Coordinate of the vertices
+  
+  
+
+
+</script>
+
+<script>
+    {% comment %} https://sandcastle.cesium.com/?src=Picking.html
+  https://sandcastle.cesium.com/?src=Callback%20Property.html {% endcomment %}
+
+  
+</script>
+
+
+
+
+
+
+</html>

@@ -1,0 +1,4 @@
+[configuration]
+username = 62010711@kmitl.ac.th
+password = Oat1200101876013
+output = C:/Users/Apirak Oulis/Desktop/Internship/123.txt
