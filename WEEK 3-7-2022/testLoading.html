@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>GISTDA Loading Spinner</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="https://sandcastle.cesium.com/Sandcastle-header.js"></script>
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> -->
+</head>
+
+<body>
+
+    <div class="content">
+        <h1>HELLO PLUEM</h1>
+    </div>
+
+    <div class="loading">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+
+
+    <div class="cesiumContainerBox">
+        <div id="cesiumContainer"></div>
+        <div>
+            <button class="cesium-button cesium-button-toolbar" onclick="Reset()">Reset Current Time</button>
+            <button class="cesium-button cesium-button-toolbar" onclick="Slow()">Slow Down Clock</button>
+            <button class="cesium-button cesium-button-toolbar" onclick="Speed()">Speed Up Clock</button>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+
+
+
+<style>
+    body {
+        background-color: #1a183f;
+        padding: 0;
+        margin: 0;
+        /* height: 100vh; */
+        display: grid;
+        place-items: center center;
+    }
+
+    .loading {
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        z-index: 199;
+        place-items: center center;
+        /* position: relative; */
+        animation: spin 3.5s infinite;
+    }
+
+    .content {
+        border-radius: 20px;
+        background-color: #ffffff;
+        display: none;
+        /* position: absolute; */
+        z-index: 200;
+    }
+
+    .cesiumContainerBox,
+    .cesiumContainer {
+        display: block;
+        margin: 0 auto;
+        /* height: 300px; */
+        width: 1000px;
+
+    }
+
+    @keyframes spin {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading>div:nth-child(1) {
+        height: 75px;
+        width: 75px;
+        background-image: linear-gradient(45deg,
+                #f7d000,
+                #e6970e);
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        box-shadow: 0 0 3px #f7d000;
+        border-radius: 50%;
+        animation: move1 1.5s infinite;
+    }
+
+    @keyframes move1 {
+        50% {
+            transform: translate(-30px, -30px) scale(0.3);
+        }
+    }
+
+    .loading>div:nth-child(2) {
+        height: 45px;
+        width: 45px;
+        background-image: linear-gradient(45deg,
+                #00d7f7,
+                #04c0f5);
+        position: absolute;
+        top: 105px;
+        right: 110px;
+        box-shadow: 0 0 2px #00d7f7;
+        border-radius: 50%;
+        animation: move2 1.5s infinite;
+    }
+
+    @keyframes move2 {
+        50% {
+            transform: translate(15px, -20px) scale(0.55);
+        }
+    }
+
+    .loading>div:nth-child(3) {
+        height: 75px;
+        width: 75px;
+        background-image: linear-gradient(45deg,
+                #f60180,
+                #f7014f);
+        position: absolute;
+        bottom: 100px;
+        right: 100px;
+        box-shadow: 0 0 3px #f60180;
+        border-radius: 50%;
+        animation: move3 1.5s infinite;
+    }
+
+    @keyframes move3 {
+        50% {
+            transform: translate(30px, 30px) scale(0.3);
+        }
+    }
+
+    .loading>div:nth-child(4) {
+        height: 45px;
+        width: 45px;
+        background-image: linear-gradient(45deg,
+                #da00f7,
+                #b501f6);
+        position: absolute;
+        bottom: 105px;
+        left: 110px;
+        border-radius: 50%;
+        animation: move4 1.5s infinite;
+    }
+
+    @keyframes move4 {
+        50% {
+            transform: translate(-15px, 20px) scale(0.55);
+        }
+    }
+</style>
+
+<script>
+    $(window).on('load', function () {
+        $('.loading').fadeOut('1000');
+        $('.content').fadeIn(5000);
+        $('.cesiumContainerBox').fadeIn(5000);
+        // $(".contentCesium").css("display", "block")
+    })
+
+
+
+</script>
+<script>
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjQ3MDZlOS1jMGQyLTRmMDctODhkZi1mMWI0MDFiYTllNTMiLCJpZCI6OTE4MjMsImlhdCI6MTY1NDU4MDQzNH0.qeZfFnvOr8ZhvCqR744X_wiSBoow1c8htCGHcx7BkW4';
+    // Plot Focus THAILAND.
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
+
+    const clock = new Cesium.Clock({
+        startTime: Cesium.JulianDate.fromIso8601("2013-12-25"),
+        currentTime: Cesium.JulianDate.fromIso8601("2013-12-25"),
+        stopTime: Cesium.JulianDate.fromIso8601("2013-12-26"),
+        clockRange: Cesium.ClockRange.LOOP_STOP, // loop when we hit the end time
+        clockStep: Cesium.ClockStep.SYSTEM_CLOCK_MULTIPLIER,
+        multiplier: 4000, // how much time to advance each tick
+        shouldAnimate: true, // Animation on by default
+    });
+
+    const viewer = new Cesium.Viewer("cesiumContainer", {
+        clockViewModel: new Cesium.ClockViewModel(clock),
+    });
+
+    viewer.scene.globe.enableLighting = true;
+
+    function Reset() {
+        const resetTime = viewer.clockViewModel.startTime;
+        viewer.clockViewModel.currentTime = resetTime;
+        viewer.timeline.updateFromClock();
+    };
+
+    function Slow() {
+        viewer.clockViewModel.multiplier /= 2;
+    };
+
+    function Speed() {
+        viewer.clockViewModel.multiplier *= 2;
+    };
+
+
+
+</script>

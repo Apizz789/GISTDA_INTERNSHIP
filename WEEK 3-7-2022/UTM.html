@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>GISTDA UTM</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="https://sandcastle.cesium.com/Sandcastle-header.js"></script>
+    <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> -->
+</head>
+
+<body>
+    <div class="cesiumContainerBox">
+        <div id="cesiumContainer"></div>
+        <div>
+
+            <button class="cesium-button cesium-button-toolbar" onclick="loadModel()">PLAY</button>
+            <button class="cesium-button cesium-button-toolbar" onclick="trackDrone()">Track Drone</button>
+            <button class="cesium-button cesium-button-toolbar" onclick="trackPlane()">Track Plane</button>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjQ3MDZlOS1jMGQyLTRmMDctODhkZi1mMWI0MDFiYTllNTMiLCJpZCI6OTE4MjMsImlhdCI6MTY1NDU4MDQzNH0.qeZfFnvOr8ZhvCqR744X_wiSBoow1c8htCGHcx7BkW4';
+    // Plot Focus THAILAND.
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
+    const viewer = new Cesium.Viewer("cesiumContainer", { terrainProvider: Cesium.createWorldTerrain() });
+
+    const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
+    // http://geojson.io/#map=9/13.5913/100.5469 GEN LAT LONG TYPE JSON
+
+
+    var ttest;
+    var flightData = []
+    var flightData1 = []
+    var flightData2 = []
+    //   viewer.trackedEntity = ppoint;
+    var Launcher = [13.306775722376099, 100.98770141601562]
+    var Destination = [12.684554689507264, 101.16348266601562]
+    var Destination2 = [12.700631471568247, 101.56448364257812]
+    ttest = [12.639053333333319, 83.23961333333331, 64800]
+
+
+    var temp_points = [];
+
+    Point = function (x, y, z) {
+        this.latitude = x;
+        this.longitude = y;
+        this.height = z;
+
+    }
+
+
+
+    var entityPosition1 = [];
+    var entityPosition2 = [];
+
+    var StartHeight = 0.0
+    var EndHeight = 20000.0
+
+    var pointA = new Point(Launcher[0], Launcher[1], StartHeight);
+    var pointB = new Point(Destination[0], Destination[1], EndHeight);
+
+    var pointC = new Point(Launcher[0], Launcher[1], StartHeight);
+    var pointD = new Point(Launcher[0], Launcher[1], StartHeight + 10000);
+
+
+    var pointX = new Point(Launcher[0], Launcher[1], StartHeight);
+    var pointY = new Point(Destination2[0], Destination2[1], EndHeight);
+
+    var pointZ = new Point(Launcher[0], Launcher[1], StartHeight + 10000);
+
+
+
+    var numberOfPoints = 100;
+
+    for (var i = 0; i < numberOfPoints; i++) {
+
+        flightData.push(new Point(
+            ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
+            ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
+            ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
+
+        flightData2.push(new Point(
+            ((pointX.latitude - pointY.latitude) / numberOfPoints) * i + pointY.latitude,
+            ((pointX.longitude - pointY.longitude) / numberOfPoints) * i + pointY.longitude,
+            ((pointX.height - pointY.height) / numberOfPoints) * i + pointY.height));
+
+    }
+
+    flightData.push(new Point(Launcher[0], Launcher[1], 0.0))
+    flightData2.push(new Point(Launcher[0], Launcher[1], 0.0))
+    // flightData2.push(new Point(Launcher[0], Launcher[1], StartHeight), new Point(Launcher[0], Launcher[1], (StartHeight / 2)), new Point(Launcher[0], Launcher[1], 0.0))
+
+
+    const timeStepInSeconds = 30;
+    const totalSeconds = timeStepInSeconds * (flightData.length - 1);
+
+
+    const start = Cesium.JulianDate.fromIso8601("2020-03-09T23:10:00Z");
+    const stop = Cesium.JulianDate.addSeconds(start, totalSeconds, new Cesium.JulianDate());
+
+
+    const start2 = Cesium.JulianDate.fromIso8601("2020-03-09T23:10:00Z");
+    const stop2 = Cesium.JulianDate.addSeconds(start2, totalSeconds, new Cesium.JulianDate());
+
+
+
+    viewer.clock.startTime = start.clone();
+    viewer.clock.stopTime = stop.clone();
+
+
+
+
+    viewer.clock.currentTime = start.clone();
+    viewer.timeline.zoomTo(start, stop);
+
+    // Speed up the playback speed 50x.
+    viewer.clock.multiplier = 5;
+    // Start playing the scene.
+    viewer.clock.shouldAnimate = true;
+
+
+
+
+    const positionProperty = new Cesium.SampledPositionProperty();
+    const positionProperty2 = new Cesium.SampledPositionProperty();
+
+    for (let i = 0; i < flightData.length; i++) {
+        const dataPoint = flightData[i];
+
+        const time = Cesium.JulianDate.addSeconds(start, i * timeStepInSeconds, new Cesium.JulianDate());
+        const position = Cesium.Cartesian3.fromDegrees(dataPoint.longitude, dataPoint.latitude, dataPoint.height);
+
+        positionProperty.addSample(time, position);
+
+        viewer.entities.add({
+            description: `Location: (${dataPoint.longitude}, ${dataPoint.latitude}, ${dataPoint.height})`,
+            position: position,
+            point: { pixelSize: 10, color: Cesium.Color.RED }
+        });
+        entityPosition1.push({
+            lat: dataPoint.latitude,
+            long: dataPoint.longitude,
+            alt: dataPoint.height,
+            ti: time,
+        });
+
+
+    }
+
+
+    for (let i = 0; i < flightData2.length; i++) {
+        const dataPoint = flightData2[i];
+
+        const time2 = Cesium.JulianDate.addSeconds(start2, i * timeStepInSeconds, new Cesium.JulianDate());
+        const position2 = Cesium.Cartesian3.fromDegrees(dataPoint.longitude, dataPoint.latitude, dataPoint.height);
+
+        positionProperty2.addSample(time2, position2);
+
+        viewer.entities.add({
+            description: `Location: (${dataPoint.longitude}, ${dataPoint.latitude}, ${dataPoint.height})`,
+            position: position2,
+            point: { pixelSize: 10, color: Cesium.Color.BLUE }
+        });
+
+        entityPosition2.push({
+            lat: dataPoint.latitude,
+            long: dataPoint.longitude,
+            alt: dataPoint.height,
+            ti: time2,
+        });
+
+    }
+
+
+
+    var check_centroid_pos1 = []
+    var check_centroid_pos2 = []
+    // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3(10470653.662, 15980600.791, 0.0), new Cesium.Cartesian3(11468313.524, 16934908.695, 0.0));
+
+    // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(100.5968, 13.5993), new Cesium.Cartesian3.fromDegrees(100.9167, 14.5333))/1000;
+
+
+
+    var r = 255, g = 0, b = 0;
+    //New color every time it's called
+    var fadeColor = new Cesium.CallbackProperty(function (time, result) {
+        if (r > 0 && b === 0) {
+            r--;
+            g++;
+        }
+        if (g > 0 && r === 0) {
+            g--;
+            b++;
+        }
+        if (b > 0 && g === 0) {
+            r++;
+            b--;
+        }
+
+        return Cesium.Color.fromBytes(r, g, b, 160, result);
+    },
+        false);
+
+
+
+    function display() {
+        // check_centroid_pos1 = []
+        // check_centroid_pos2 = []
+
+        var searchObj1 = entityPosition1.find((e) => parseInt(e.ti.secondsOfDay) > parseInt(viewer.clock.currentTime.secondsOfDay) && e.ti.dayNumber === viewer.clock.currentTime.dayNumber);
+        var searchObj2 = entityPosition2.find((e) => parseInt(e.ti.secondsOfDay) > parseInt(viewer.clock.currentTime.secondsOfDay) && e.ti.dayNumber === viewer.clock.currentTime.dayNumber);
+        var setRadians = 500.0
+
+        const greenCylinder1 = viewer.entities.add({
+            name: "Green cylinder with black outline",
+            position: positionProperty2,
+            orientation: new Cesium.VelocityOrientationProperty(positionProperty2),
+            cylinder: {
+                length: 570.0,
+                topRadius: setRadians,
+                bottomRadius: setRadians,
+                material: Cesium.Color.GREEN.withAlpha(0.5),
+                outline: true,
+                outlineColor: Cesium.Color.DARK_GREEN,
+                minimumPixelSize: 750, maximumPixelSize: 750
+            },
+        });
+
+        const greenCylinder2 = viewer.entities.add({
+            name: "Green cylinder with black outline2",
+            position: positionProperty,
+            orientation: new Cesium.VelocityOrientationProperty(positionProperty),
+            cylinder: {
+
+                length: 570.0,
+                topRadius: setRadians,
+                bottomRadius: setRadians,
+                // material: new Cesium.ColorMaterialProperty(fadeColor),
+                material: Cesium.Color.GREEN.withAlpha(0.5),
+                outline: true,
+                outlineColor: Cesium.Color.DARK_GREEN,
+                minimumPixelSize: 750, maximumPixelSize: 750
+            },
+        });
+
+        check_centroid_pos1.push(searchObj1)
+        check_centroid_pos2.push(searchObj2)
+
+        // console.log(check_centroid_pos1)
+        // console.log(check_centroid_pos2)
+
+        const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(searchObj1.long, searchObj1.lat, searchObj1.alt), new Cesium.Cartesian3.fromDegrees(searchObj2.long, searchObj2.lat, searchObj2.alt)) / 1000;
+        if ((searchObj1 !== undefined) && (searchObj2 !== undefined)) {
+            console.log("D : " + d + " KM")
+
+
+            if (d <= 1) {
+                console.log("JER LAEW")
+                greenCylinder1.cylinder.material.color.setValue(Cesium.Color.RED)
+                greenCylinder2.cylinder.material.color.setValue(Cesium.Color.RED)
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    // const c = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(check_centroid_pos1.long, check_centroid_pos1.lat, check_centroid_pos1.alt), new Cesium.Cartesian3.fromDegrees(check_centroid_pos2.long, check_centroid_pos2.lat, check_centroid_pos2.alt)) / 1000;
+    // console.log("H : " + c + " KM")
+
+    // const d1 = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(Launcher[1], Launcher[0], 0), new Cesium.Cartesian3.fromDegrees(83.23961333333331, 12.639053333333319, 0)) / 1000;
+
+    // console.log("D : " + d + " KM")
+
+    //  var caculate_distance = 
+
+
+
+    // STEP 6 CODE (airplane entity)
+    async function loadModel() {
+        var int1 = setInterval(display, 10)
+
+
+
+
+        // Load the glTF model from Cesium ion.
+        //   https://sketchfab.com/3d-models/drone-v1-a75a15d00a144d108c3f9c7b31c4ff97
+
+        const center = new Cesium.Cartesian3.fromDegrees(0, 0, 0);
+        // console.log(positionProperty._property._values);
+        const Heading = Cesium.Math.toRadians(0.0);
+        const Pitch = Cesium.Math.toRadians(90.0);
+        const Roll = Cesium.Math.toRadians(0.0);
+        const orientation = Cesium.Transforms.headingPitchRollQuaternion(center, new Cesium.HeadingPitchRoll(Heading, Pitch, Roll))
+
+
+
+        const airplaneUri = await Cesium.IonResource.fromAssetId(1196865);
+        const airplaneUri2 = await Cesium.IonResource.fromAssetId(1196865);
+
+
+
+        const airplaneEntity = viewer.entities.add({
+            availability: new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({ start: start, stop: stop })]),
+            description: `Location: (${positionProperty})`,
+            position: positionProperty,
+            // Attach the 3D model instead of the green point.
+            model: { uri: airplaneUri, minimumPixelSize: 50, maximumPixelSize: 50 },
+            // Automatically compute the orientation from the position.
+            orientation: new Cesium.VelocityOrientationProperty(positionProperty),
+            path: new Cesium.PathGraphics({ width: 3 })
+        });
+
+        const airplaneEntity2 = viewer.entities.add({
+            availability: new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({ start: start2, stop: stop2 })]),
+            description: `Location: (${positionProperty})`,
+            position: positionProperty2,
+            // Attach the 3D model instead of the green point.
+            model: { uri: airplaneUri2, minimumPixelSize: 50, maximumPixelSize: 50 },
+            // Automatically compute the orientation from the position.
+            orientation: new Cesium.VelocityOrientationProperty(positionProperty2),
+            path: new Cesium.PathGraphics({ width: 3 })
+        });
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+    // const positionja = new Cesium.Cartesian3(4861969.5389871, -1280248.5800437953, -3911214.883805615);
+
+    // // console.log()
+    // selectTile(positionja);
+
+    // function selectTile(cartesian) {
+    //     console.log("เจอแล้วค้าบบบบบบบบบบบบบบบบบบ")
+    //     var selectedTile;
+
+    //     if (Cesium.defined(cartesian)) {
+
+    //         var cartographic = Cesium.Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+
+    //         var tilesRendered = viewer.scene.globe._surface.tileProvider._tilesToRenderByTextureCount;
+
+    //         for (var textureCount = 0; !selectedTile && textureCount < tilesRendered.length; ++textureCount) {
+
+    //             var tilesRenderedByTextureCount = tilesRendered[textureCount];
+
+    //             if (!Cesium.defined(tilesRenderedByTextureCount)) {
+
+    //                 continue;
+
+    //             }
+
+    //             for (var tileIndex = 0; !selectedTile && tileIndex < tilesRenderedByTextureCount.length; ++tileIndex) {
+
+    //                 var tile = tilesRenderedByTextureCount[tileIndex];
+
+    //                 if (Cesium.Rectangle.contains(tile.rectangle, cartographic)) {
+
+    //                     selectedTile = tile;
+
+    //                 }
+
+    //             }
+
+    //         }
+
+    //     }
+
+    //     return selectedTile;
+    // }
+
+
+
+
+</script>
+
+</html>
