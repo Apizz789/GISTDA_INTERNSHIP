@@ -1,0 +1,69 @@
+<div>
+    <p>555555555+</p>
+</div>
+
+
+
+<script>
+
+    //     // P5
+    //     [13.099239378252992, 100.92564582824706, 98.0],
+    //     // P4
+    //     [13.098915438556338, 100.92587113380432, 91.0],
+    //     // P3
+    //     [13.098581048745066, 100.92609643936157, 84.0],
+    //     // P2
+    //     [13.09825710818236, 100.92632174491882, 77.0],
+    //     // P1
+    //     [13.097943616909477, 100.92655777931213, 70.0],
+
+
+    //     [13.097969741197451, 100.92664361000061, 60.0],
+    //     [13.097974966054723, 100.92942774295807, 60.0],
+    //     [13.100676202415105, 100.92939019203185, 60.0],
+    //     [13.100686652014678, 100.93045771121977, 60.0],
+    //     [13.099787984831707, 100.93048453330994, 60.0],
+    //     [13.099782760012907, 100.92994272708893, 60.0],
+    //     [13.097995865482678, 100.92999637126921, 50.0],
+
+
+
+    var flightData1 =[]
+
+    var Launcher1 =  [13.097943616909477, 100.92655777931213, 70.0]
+    var Destination = [13.097969741197451, 100.92664361000061, 60.0]
+
+    var StartHeight = 60
+    var EndHeight = 70
+
+
+    var numberOfPoints = 20;
+
+
+    Point = function (x, y, z) {
+        this.latitude = x;
+        this.longitude = y;
+        this.height = z;
+
+    }
+
+
+    var pointA = new Point(Launcher1[0], Launcher1[1], StartHeight);
+    var pointB = new Point(Destination[0], Destination[1], EndHeight);
+
+
+    for (var i = 0; i < numberOfPoints; i++) {
+
+        flightData1.push(new Point(
+            ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
+            ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
+            ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
+
+        
+    }
+
+    console.log(flightData1)
+
+
+
+</script>
