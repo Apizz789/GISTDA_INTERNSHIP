@@ -69,7 +69,10 @@
         background-color: #000000;
         background-image: linear-gradient(90deg, rgb(53, 203, 55) 0%, rgba(24, 161, 247, 1) 100%);
         height: 100vh;
+        width: 100vw;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     * {
@@ -101,22 +104,91 @@
 
     }
 
-    .logoimg1 {
-        width: 300px;
-        height: 125px;
+
+    .Xletter {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 12px 48px;
-        /* background-color: #000000; */
-        border-radius: 20px;
+        top: 45%;
+        left: 40%;
+        font-size: 30px;
 
 
     }
 
+    .logoimg1 {
+        width: 300px;
+        height: 100px;
+        position: absolute;
+        /* top: 520%; */
+        /* left: 40%; */
+        /* transform: translate(-50%, -50%); */
+        padding: 12px 48px;
+        /* background-color: #000000; */
+        border-radius: 20px;
+        animation: slide-up 5s;
+
+
+    }
+
+    .logoimg2 {
+        width: 300px;
+        height: 125px;
+        position: absolute;
+        /* top: 50%; */
+        /* left: 60%; */
+        /* transform: translate(-50%, -50%); */
+        padding: 12px 48px;
+        /* background-color: #000000; */
+        border-radius: 20px;
+        animation: slide-up 5s;
+
+
+    }
+
+
+    .slideUp {
+
+        animation: slide-up 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+    }
+
+    @keyframes slide-up {
+        /* from {
+            opacity: 0.0;
+            line-height: 350px;
+           
+            
+        }
+        to {
+            opacity: 1;
+            line-height: 37px;
+            
+        } */
+
+        0% {
+            opacity: 0.0;
+            /* transform: translate(50%, 50%); */
+            /* transform: translateY(-100%, -100%); */
+
+            transform: translateY(500px);
+            /* transform: translateX(100px); */
+        }
+
+        100% {
+            opacity: 1;
+            /* transform: translate(50%, 50%); */
+            transform: translateY(200px);
+            /* transform: translateY(-50%, -50%); */
+            /* transform: translateX(50px); */
+        }
+
+    }
+
+
+
+
+
     .galaxy-background {
         z-index: -2;
+
     }
 
 
@@ -594,7 +666,7 @@
     .raise6:hover,
     .raise6 :focus {
         box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
-        transform: translateY(-0.25em);
+        transform: translateY(-0.50em);
     }
 
 
@@ -691,8 +763,8 @@
 
     .btn-shine {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        /* top: 50%; */
+        /* left: 50%; */
         transform: translate(-50%, -50%);
         padding: 12px 48px;
         color: #19bc8b;
@@ -712,7 +784,7 @@
     .btn-shine:hover,
     .btn-shine:focus {
         box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
-        transform: translate(-50%, -55%);
+        transform: translate(-50%, -60%);
     }
 
 
@@ -809,37 +881,59 @@
     <!-- <div class="background-palalax"></div> -->
 
     <div class="frame-befHome">
-        <div>
-            <center><img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/logo-footer.png"
-                    alt="HTML tutorial" class="logoimg1 " style="position: absolute; top: 45%;"></center>
-            <button class=" btn-shine" onclick="show0()" target="_blank" style="position: absolute; top: 55%;"> Get
-                Ready to access</button>
+        <div class="slideUp">
+            <center>
+
+                <img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/logo-footer.png"
+                    alt="HTML tutorial" class=" " style="width: 150px;
+                height: 50px; display: block;
+  margin-left: auto;
+  margin-right: auto;">
+
+
+                <img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/AstroLab-BW.png"
+                    alt="HTML tutorial" class=" " style="width: 700; height: auto; display: block;
+                margin-left: auto;
+                margin-right: auto; ">
+
+
+
+
+<button class=" btn-shine" onclick="show0()" target="_blank"> Get Ready to access</button>
+
+            </center>
+
+
+           
+
         </div>
 
     </div>
 
-    <div class="frame0">
-        <div class="content">
+    <div class="frame0 slide-up">
+     
+            <div class="content slide-up">
 
-            <center><img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/logo-footer.png"
-                    alt="HTML tutorial" class="logoimg"></center>
+                <center><img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/logo-footer.png"
+                        alt="HTML tutorial" class="logoimg"></center>
 
-            <h1>[SIRACE]</h1>
-            <p class="showtext">(The Simulation website for the risk area when the parts of rocket crashes to Earth)</p>
-            <br>
+                <h1>[SIRACE]</h1>
+                <p class="showtext">(The Simulation website for the risk area when the parts of rocket crashes to Earth)
+                </p>
+                <br>
 
-            <div class="buttons">
-                <!-- // fill pulse close raise up slide offset -->
-                <button class="raise1" onclick="show1()">What is SIRACE ?</button>
-                <button class="raise2" onclick="show2()">How To Use SIRACE</button>
-                <button class="raise3" onclick="show3()">SIRACE Simulation</button><br>
-                <button class="raise4" onclick="show4()">Table Coordinates</button>
-                <button class="raise5" onclick="show5()">Coordinates Calculated</button><br>
-                <button class="raise6" onclick="show6()">Contact Us</button>
-                <!-- <button class="raise">Slide</button>
+                <div class="buttons ">
+                    <!-- // fill pulse close raise up slide offset -->
+                    <button class="raise1" onclick="show1()">What is SIRACE ?</button>
+                    <button class="raise2" onclick="show2()">How To Use SIRACE</button>
+                    <button class="raise3" onclick="show3()">SIRACE Simulation</button><br>
+                    <button class="raise4" onclick="show4()">Table Coordinates</button>
+                    <button class="raise5" onclick="show5()">Coordinates Calculated</button><br>
+                    <button class="raise6" onclick="show6()">Contact Us</button>
+                    <!-- <button class="raise">Slide</button>
                 <button class="raise">Offset</button> -->
+                </div>
             </div>
-        </div>
     </div>
 
 
@@ -851,7 +945,7 @@
 
 
     <div class="frame1" style="position: absolute;">
-        <div class="content">
+        <div class="content slide-up">
 
             <h1>What Is SIRACE</h1>
             <h2 style="text-align:justify;"> &nbsp&nbsp&nbsp SIRACE is short for The Simulation website for the risk
@@ -873,7 +967,7 @@
 
 
     <div class="frame2">
-        <div class="content">
+        <div class="content ">
 
             <h1>How To Use</h1>
             <h2 style="text-align:justify;"> SIRACE it's simply and easy to use.<br>
@@ -891,7 +985,7 @@
 
 
     <div class="frame3">
-        <div class="conten">
+        <div class="conten ">
 
             <h1>How To Use</h1>
             <h2 style="text-align:justify;"> SIRACE it's simply and easy to use.<br>
@@ -940,7 +1034,7 @@
     function show2() {
 
         $('.frame0').fadeOut(500);
-        $('.frame1').fadeOut(5000);
+        $('.frame1').fadeOut(500);
         $('.frame2').fadeIn(1000);
         $('.frame3').fadeOut(500);
 
