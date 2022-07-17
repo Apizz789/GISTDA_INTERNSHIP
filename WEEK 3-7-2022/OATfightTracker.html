@@ -36,6 +36,8 @@
                </center>
                <center>
                     <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="loadModel()">MOTION TEST</button>
+                    <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="Add()">Rotation Speed</button>
+                    <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="Del()">Rotation Slow</button>
 
                </center>
           </div>
@@ -62,12 +64,17 @@
           const positionProperty = new Cesium.SampledPositionProperty();
           const positionProperty2 = new Cesium.SampledPositionProperty();
 
+
+          // ----------------------------------------------------------------------------------------
+          // Globe Rotation
+          // ----------------------------------------------------------------------------------------
+          var real_speed = -0.0025
           var rotatioSpeed;
           var lastNow;
 
           function spinIt(scene, time) {
-               var now = Date.now();
-               var spinRate = rotatioSpeed;
+               var now = Date.now();            
+               var spinRate = rotatioSpeed*viewer.clockViewModel.multiplier;
                var delta = (now - lastNow) / 10000;
                lastNow = now;
                viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, spinRate * delta);
@@ -81,8 +88,23 @@
                return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
           }
 
-          rotatioSpeed = -0.008640;
+          rotatioSpeed = real_speed;
           spinGlobe(viewer);
+          // ----------------------------------------------------------------------------------------
+          // ----------------------------------------------------------------------------------------
+
+
+
+
+          function Add(){
+               real_speed += 50.5 
+               console.log(real_speed)
+          }
+          function Del() {
+               real_speed -= 0.5 
+               console.log(real_speed)
+
+          }
 
           var entityPosition = [];
 

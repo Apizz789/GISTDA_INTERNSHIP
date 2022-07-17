@@ -187,16 +187,19 @@
     Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
 
     const clock = new Cesium.Clock({
-        startTime: Cesium.JulianDate.fromIso8601("2013-12-25"),
-        currentTime: Cesium.JulianDate.fromIso8601("2013-12-25"),
-        stopTime: Cesium.JulianDate.fromIso8601("2013-12-26"),
+        startTime: Cesium.JulianDate.now(),
+        currentTime: Cesium.JulianDate.now(),
+        stopTime: Cesium.JulianDate.fromIso8601("2022-12-31"),
         clockRange: Cesium.ClockRange.LOOP_STOP, // loop when we hit the end time
         clockStep: Cesium.ClockStep.SYSTEM_CLOCK_MULTIPLIER,
-        multiplier: 4000, // how much time to advance each tick
+        multiplier: 1.1, // how much time to advance each tick
         shouldAnimate: true, // Animation on by default
     });
 
     const viewer = new Cesium.Viewer("cesiumContainer", {
+        geocoder:false,
+        baseLayerPicker:false,
+        navigationHelpButton:false,
         clockViewModel: new Cesium.ClockViewModel(clock),
     });
 
@@ -215,6 +218,33 @@
     function Speed() {
         viewer.clockViewModel.multiplier *= 2;
     };
+
+    // ----------------------------------------------------------------------------------------
+    // Globe Rotation
+    // ----------------------------------------------------------------------------------------
+    var rotatioSpeed;
+    var lastNow;
+
+    function spinIt(scene, time) {
+        var now = Date.now();
+        var spinRate = rotatioSpeed;
+        var delta = (now - lastNow) / 10000;
+        lastNow = now;
+        viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, spinRate * delta);
+    }
+    function spinGlobe(viewer) {
+        lastNow = Date.now();
+        viewer.scene.postRender.addEventListener(spinIt);
+    }
+
+    function map(x, in_min, in_max, out_min, out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    rotatioSpeed =  -(viewer.clockViewModel.multiplier/8624);
+    spinGlobe(viewer);
+          // ----------------------------------------------------------------------------------------
+          // ----------------------------------------------------------------------------------------
 
 
 

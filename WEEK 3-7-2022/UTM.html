@@ -17,8 +17,8 @@
     <script src="https://sandcastle.cesium.com/Sandcastle-header.js"></script>
     <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> -->
 
-   
-  
+
+
 </head>
 <style>
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
@@ -38,6 +38,10 @@
     header {
         background-color: #141b25;
         border-radius: 20px;
+    }
+
+    .intoolbar {
+        margin-top: 10px;
     }
 
     .main-nav {
@@ -135,6 +139,7 @@
 
         .menu-btn {
             display: block;
+            z-index: 99;
         }
 
         #check:checked~.navlinks {
@@ -164,41 +169,57 @@
         <nav class="main-nav">
             <input type="checkbox" id="check" />
             <label for="check" class="menu-btn">
-              <i class="fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
             </label>
-            <a href="#" class="logo"><img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/AstroLab-BW.png"
-                alt="HTML tutorial" class="logo " style="width: 140px; height: 70px; margin-top: 10px;"></a>
-            
+            <a href="#" class="logo"><img
+                    src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/AstroLab-BW.png"
+                    alt="HTML tutorial" class="logo " style="width: 140px; height: 70px; margin-top: 10px;"></a>
+
             <ul class="navlinks">
-              <li><a href="#">GISTDA_INTERNSHIP</a></li>
-              <li><a href="#">Projects</a></li>
-              <li><a href="#">About</a></li>
-              <li><a href="#" class="contact">Contact</a></li>
+                <li><a href="#">GISTDA_INTERNSHIP</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#" class="contact">Contact</a></li>
             </ul>
-          </nav>
+        </nav>
     </header>
     <div class="cesiumContainerBox">
         <center>
-           
-           
-            <div id="cesiumContainer" class="fullSize" style="z-index: -99; width: 1800px; height: 800px; " >
-                <div style="z-index: 1; position:fixed; top: 110px; " >
 
 
-                    <button class="cesium-button cesium-button-toolbar" onclick="testtemp1()">THALAND</button>
-                    <button class="cesium-button cesium-button-toolbar" onclick="testtemp2()">THALAND</button>
-    
-    
-                    <button class="cesium-button cesium-button-toolbar" onclick="loadModel()">Load Model</button>
-    
-                    <button class="cesium-button cesium-button-toolbar" onclick="playTime()">Play Time</button>
-                    <button class="cesium-button cesium-button-toolbar" onclick="pauseTime()">Stop Time</button>
-    
-    
-                    <button class="cesium-button cesium-button-toolbar" onclick="clearAll()">clearAll</button>
-                </div></div>
+            <div id="cesiumContainer" class="fullSize" style="z-index: -99; width: 1800px; height: 800px; ">
+                <div style="z-index: 1; position:absolute; background-color:rgba(0, 0, 0, 0.583); margin: 5px; border-radius:20px; width: 500px; height:80px;">
+
+                    <!-- <button class="cesium-button cesium-button-toolbar" onclick="testtemp1()">Show THALAND</button>
+                    <button class="cesium-button cesium-button-toolbar" onclick="testtemp2()">Hide THALAND</button> -->
+                    <div class="intoolbar">
+                        <div>
+                            <button class="cesium-button cesium-button-toolbar" onclick="loadModel()">Load
+                                Model</button>
+                            <button class="cesium-button cesium-button-toolbar" onclick="playTime()">Play Time</button>
+                            <button class="cesium-button cesium-button-toolbar" onclick="pauseTime()">Stop Time</button>
+                        </div>
+
+                        <div>
+                            <button class="cesium-button cesium-button-toolbar" onclick="Slow()">Slow 1x Time</button>
+                            <button class="cesium-button cesium-button-toolbar" onclick="Speed()">Speed 1x Time</button>
+                            <button class="cesium-button cesium-button-toolbar" onclick="clearAll()">Clear All
+                                Entity</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div>
+                    <img
+                    src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/AstroLab-BW.png"
+                    alt="HTML tutorial" class="logo " style="z-index: 50;  position:absolute;  width: 140px; height: 70px; left:50px;top:810px; margin-top: 10px;">
+
+                </div>
+            </div>
         </center>
-    
+
     </div>
 
 
@@ -208,6 +229,9 @@
     // Plot Focus THAILAND.
     Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
     const viewer = new Cesium.Viewer('cesiumContainer', {
+        geocoder:false,
+        baseLayerPicker:false,
+        navigationHelpButton:false,
         shouldAnimate: true,
         terrainProvider: Cesium.createWorldTerrain(),
 
@@ -215,7 +239,10 @@
 
 
     const entities = viewer.entities;
-
+    viewer.fullscreenButton.container.style.visibility = "hidden";
+    viewer.animation.container.style.visibility = "hidden";
+    viewer.timeline.container.style.visibility = "hidden";
+    viewer._cesiumWidget._creditContainer.style.display = "none";
     viewer.scene.debugShowFramesPerSecond = true;
 
     const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
@@ -246,6 +273,14 @@
     function pauseTime() {
         viewer.clockViewModel.shouldAnimate = false;
     }
+
+    function Slow() {
+        viewer.clockViewModel.multiplier /= 1.1;
+    };
+
+    function Speed() {
+        viewer.clockViewModel.multiplier *= 1.1;
+    };
 
 
 
@@ -458,7 +493,7 @@
         [13.099787984831707, 100.93048453330994, 60.0],
         [13.099782760012907, 100.92994272708893, 60.0],
         [13.097995865482678, 100.92999637126921, 50.0],
-       
+
     )
 
 
@@ -632,6 +667,7 @@
 
         });
     }
+
     boxes_thailand_items_Color_list[0].show = false
     boxes_thailand_items_Color_list[1].show = false
     boxes_thailand_items_Color_list[2].show = false
@@ -639,7 +675,17 @@
     boxes_thailand_items_Color_list[4].show = false
 
 
-
+    const greenCircle888 = viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(100.92766284942627, 13.100263442877834, 30.0),
+        name: "Green circle at height with outline",
+        ellipse: {
+            semiMinorAxis: 30.0,
+            semiMajorAxis: 45.0,
+            height: 20.0,
+            material: "https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/astrolablogo.png",
+            outline: true,
+        },
+    });
 
     const redCone = viewer.entities.add({
         name: "RGB cone",
@@ -658,7 +704,7 @@
             length: 60.0,
             topRadius: 0.0,
             bottomRadius: 50.0,
-            material: "https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/GISTDA_LOGO.png",
+            material: new Cesium.ColorMaterialProperty(fadeColor),
         },
     });
 
@@ -748,15 +794,7 @@
     // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(100.5968, 13.5993), new Cesium.Cartesian3.fromDegrees(100.9167, 14.5333))/1000;
 
 
-    function clearAll() {
-        // pauseTime() 
-        Resettime = false
-        // var int1 = setInterval(display, 0)
-        viewer.entities.removeAll();
-        entities.removeAll();
-        // viewer.entities.remove(greenCylinder1)
 
-    }
 
 
     // STEP 6 CODE (airplane entity)
@@ -956,6 +994,15 @@
     }
 
 
+    function clearAll() {
+        // pauseTime() 
+        Resettime = false
+        viewer.entities.removeAll();
+        entities.removeAll();
+        location.reload()
+
+
+    }
     function Aobject_toggleCallbackTrue() {
         return true;
     }
@@ -1407,3 +1454,24 @@
 </script>
 
 </html>
+
+
+
+<!-- 
+"label" : {
+    "fillColor" : {
+        "rgba" : [255, 255, 0, 255]
+    },
+    "font" : "bold 10pt Segoe UI Semibold",
+    "horizontalOrigin" : "LEFT",
+    "outlineColor" : {
+        "rgba" : [0, 0, 0, 255]
+    },
+    "pixelOffset" : {
+        "cartesian2" : [10.0, 0.0]
+    },
+    "scale" : 1.0,
+    "show" : true,
+    "style" : "FILL",
+    "text" : "Moon",
+    "verticalOrigin" : "CENTER" -->
