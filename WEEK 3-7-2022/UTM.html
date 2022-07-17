@@ -5,33 +5,200 @@
     <meta charset="utf-8" />
     <title>GISTDA UTM</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
 
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.82/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     <script src="https://sandcastle.cesium.com/Sandcastle-header.js"></script>
     <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> -->
+
+   
+  
 </head>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+
+    @font-face {
+        font-family: AstroSpace;
+        src: url(/fonts/AstroSpace.ttf);
+    }
+
+    body {
+        margin: 50;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+        background-color: #212c3b;
+    }
+
+    header {
+        background-color: #141b25;
+        border-radius: 20px;
+    }
+
+    .main-nav {
+        height: 90px;
+        margin-bottom: 10px;
+    }
+
+    .logo {
+        color: white;
+        line-height: 90px;
+        font-size: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-left: 30px;
+        font-family: "AstroSpace", sans-serif;
+    }
+
+    .navlinks {
+        list-style: none;
+        float: right;
+        line-height: 90px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navlinks li {
+        display: inline-block;
+        margin: 0px 20px;
+    }
+
+    .navlinks li a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        transition: all 0.3s linear 0s;
+        text-transform: uppercase;
+    }
+
+    .navlinks li a:hover {
+        color: #7ebcb9;
+        padding-bottom: 7px;
+        border-bottom: 2px solid #7ebcb9;
+    }
+
+    li a.contact {
+        background-color: #00adb5;
+        padding: 9px 20px;
+        border-radius: 50px;
+        transition: all 0.3s ease 0s;
+        border-bottom: none;
+    }
+
+    li a.contact:hover {
+        background-color: #047e85;
+        color: white;
+        border-bottom: none;
+    }
+
+    #check {
+        display: none;
+    }
+
+    .menu-btn {
+        font-size: 25px;
+        color: white;
+        float: right;
+        line-height: 90px;
+        margin-right: 40px;
+        display: none;
+        cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+        .navlinks {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            text-align: center;
+            transition: all 0.5s;
+            right: -100%;
+            background: #222831;
+        }
+
+        .navlinks li {
+            display: block;
+        }
+
+        .navlinks li a {
+            font-size: 20px;
+        }
+
+        .navlinks li a:hover {
+            border-bottom: none;
+        }
+
+        .menu-btn {
+            display: block;
+        }
+
+        #check:checked~.navlinks {
+            right: 0;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .logo {
+            margin-left: 10px;
+            font-size: 25px;
+        }
+
+        .menu-btn {
+            margin-right: 10px;
+            font-size: 25px;
+        }
+
+        .menu-btn:focus {
+            color: blue;
+        }
+    }
+</style>
 
 <body>
+    <header>
+        <nav class="main-nav">
+            <input type="checkbox" id="check" />
+            <label for="check" class="menu-btn">
+              <i class="fas fa-bars"></i>
+            </label>
+            <a href="#" class="logo"><img src="https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/AstroLab-BW.png"
+                alt="HTML tutorial" class="logo " style="width: 140px; height: 70px; margin-top: 10px;"></a>
+            
+            <ul class="navlinks">
+              <li><a href="#">GISTDA_INTERNSHIP</a></li>
+              <li><a href="#">Projects</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#" class="contact">Contact</a></li>
+            </ul>
+          </nav>
+    </header>
     <div class="cesiumContainerBox">
-        <div id="cesiumContainer"></div>
-        <div>
+        <center>
+           
+           
+            <div id="cesiumContainer" class="fullSize" style="z-index: -99; width: 1800px; height: 800px; " >
+                <div style="z-index: 1; position:fixed; top: 110px; " >
 
 
-            <button class="cesium-button cesium-button-toolbar" onclick="testtemp1()">THALAND</button>
-            <button class="cesium-button cesium-button-toolbar" onclick="testtemp2()">THALAND</button>
-
-
-            <button class="cesium-button cesium-button-toolbar" onclick="loadModel()">Load Model</button>
-
-            <button class="cesium-button cesium-button-toolbar" onclick="playTime()">Play Time</button>
-            <button class="cesium-button cesium-button-toolbar" onclick="pauseTime()">Stop Time</button>
-
-
-            <button class="cesium-button cesium-button-toolbar" onclick="clearAll()">clearAll</button>
-        </div>
+                    <button class="cesium-button cesium-button-toolbar" onclick="testtemp1()">THALAND</button>
+                    <button class="cesium-button cesium-button-toolbar" onclick="testtemp2()">THALAND</button>
+    
+    
+                    <button class="cesium-button cesium-button-toolbar" onclick="loadModel()">Load Model</button>
+    
+                    <button class="cesium-button cesium-button-toolbar" onclick="playTime()">Play Time</button>
+                    <button class="cesium-button cesium-button-toolbar" onclick="pauseTime()">Stop Time</button>
+    
+    
+                    <button class="cesium-button cesium-button-toolbar" onclick="clearAll()">clearAll</button>
+                </div></div>
+        </center>
+    
     </div>
 
 
@@ -45,6 +212,7 @@
         terrainProvider: Cesium.createWorldTerrain(),
 
     });
+
 
     const entities = viewer.entities;
 
@@ -290,7 +458,7 @@
         [13.099787984831707, 100.93048453330994, 60.0],
         [13.099782760012907, 100.92994272708893, 60.0],
         [13.097995865482678, 100.92999637126921, 50.0],
-
+       
     )
 
 
@@ -368,7 +536,7 @@
                 entities.add({
                     name: "Red box with black outline" + [a],
                     parent: boxes_guardian_items,
-                    position: Cesium.Cartesian3.fromDegrees(temp_boxes[a][0], temp_boxes[a][1], 30.0),
+                    position: Cesium.Cartesian3.fromDegrees(temp_boxes[a][0], temp_boxes[a][1], 20.0),
                     box: {
                         dimensions: new Cesium.Cartesian3(25.0, 25.0, 50.0),
                         material: Cesium.Color.RED.withAlpha(0.5),
@@ -428,7 +596,7 @@
                 entities.add({
                     name: "SIXZAX NO. " + [a - 14],
                     parent: boxes_sixzax_items,
-                    position: Cesium.Cartesian3.fromDegrees(temp_boxes[a][0], temp_boxes[a][1], 30.0),
+                    position: Cesium.Cartesian3.fromDegrees(temp_boxes[a][0], temp_boxes[a][1], 20.0),
                     box: {
                         dimensions: new Cesium.Cartesian3(25.0, 100.0, 50.0),
                         material: Cesium.Color.GOLD.withAlpha(0.5),
@@ -496,7 +664,6 @@
 
 
 
-
     const redLine = viewer.entities.add({
         name: "Red line on terrain",
         polyline: {
@@ -544,7 +711,6 @@
 
 
 
-
     viewer.flyTo(redCone);
 
 
@@ -571,12 +737,8 @@
     ttest = [12.639053333333319, 83.23961333333331, 64800]
 
 
-
-
     const positionProperty1 = new Cesium.SampledPositionProperty();
     const positionProperty2 = new Cesium.SampledPositionProperty();
-
-
 
 
     var check_centroid_pos1 = []
@@ -584,8 +746,6 @@
     // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3(10470653.662, 15980600.791, 0.0), new Cesium.Cartesian3(11468313.524, 16934908.695, 0.0));
 
     // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3.fromDegrees(100.5968, 13.5993), new Cesium.Cartesian3.fromDegrees(100.9167, 14.5333))/1000;
-
-
 
 
     function clearAll() {
@@ -597,7 +757,6 @@
         // viewer.entities.remove(greenCylinder1)
 
     }
-
 
 
     // STEP 6 CODE (airplane entity)
@@ -622,7 +781,6 @@
         }
 
 
-
         var StartHeight = 100.0
         var EndHeight = 500.0
 
@@ -639,11 +797,8 @@
         var pointZ = new Point(Launcher1[0], Launcher1[1], StartHeight + 10000);
 
 
-
         var numberOfPoints = 32;
         var numberOfPoints2 = 65;
-
-
 
         // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -667,22 +822,12 @@
         // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
-
-
         for (var n = 0; n < temp_line.length; n++) {
 
             flightData1.push(new Point(temp_line[n][0], temp_line[n][1], temp_line[n][2]));
             console.log("5666666")
 
-
-
         }
-
-
-
 
         // flightData2.push(new Point(Launcher1[0], Launcher1[1], StartHeight), new Point(Launcher1[0], Launcher1[1], (StartHeight / 2)), new Point(Launcher1[0], Launcher1[1], 0.0))
 
@@ -715,9 +860,6 @@
         viewer.clock.multiplier = 5;
         // Start playing the scene.
         viewer.clock.shouldAnimate = true;
-
-
-
 
 
         // Load the glTF model from Cesium ion.
@@ -809,12 +951,6 @@
             });
 
         }
-
-
-
-
-
-
 
 
     }
@@ -969,7 +1105,7 @@
             console.log("D4 : " + distance_btw_drone_THA_p4 + " (" + ((setRadians * 2) / 1000) + ")")
             console.log("D5 : " + distance_btw_drone_THA_p5 + " (" + ((setRadians * 2) / 1000) + ")")
 
-            if (distance_btw_drone_THA_p1 < ((setRadians * 2) / 1000) - 0.005) {
+            if (distance_btw_drone_THA_p1 < ((setRadians) / 1000) - 0.005) {
                 boxes_guardian_items_BW_list[0].show = false;
                 boxes_thailand_items_Color_list[0].show = true;
                 console.log("SHOW 1")
@@ -1076,23 +1212,6 @@
                 rev_show_cylinder();
 
             }
-
-
-
-
-
-
-            // else if (d <= ((setRadians * 4) / 1000) && d > ((setRadians * 2) / 1000)) {
-
-            //     Aobject_toggleCallbackFalse()
-            //     // viewer.entities.remove(greenCylinder1)
-            //     // Clone_greenCylinder1
-
-            //     greenCylinder1.cylinder.material.color.setValue(Cesium.Color.BLUE)
-            //     greenCylinder2.cylinder.material.color.setValue(Cesium.Color.BLUE)
-
-            // }
-
 
         } else {
             pauseTime()

@@ -18,7 +18,6 @@
 
 
 
-</style>
 
 
 <!-- // WIGET : https://chowdera.com/2022/03/202203250838362617.html -->
@@ -28,14 +27,19 @@
 
      <div class="container">
           <div id="cesiumContainer" class="fullSize" style=" z-index: 1;"></div>
-          <center>
-               <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="testnaka()">SHOW WIDGET TEST</button>
-               <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="testnakanaka()">HIDE WIDGET TEST</button>
-          </center>
-          <center>
-               <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="loadModel()">MOTION TEST</button>
-               
-          </center>
+          <div>
+               <center>
+                    <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="showWitget()">SHOW WIDGET
+                         TEST</button>
+                    <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="hideWitget()">HIDE WIDGET
+                         TEST</button>
+               </center>
+               <center>
+                    <button class="mt-3 " style=" width: 200px; z-index: 3;" onClick="loadModel()">MOTION TEST</button>
+
+               </center>
+          </div>
+
 
      </div>
 
@@ -44,23 +48,19 @@
 
 
           Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZjQ3MDZlOS1jMGQyLTRmMDctODhkZi1mMWI0MDFiYTllNTMiLCJpZCI6OTE4MjMsImlhdCI6MTY1NDU4MDQzNH0.qeZfFnvOr8ZhvCqR744X_wiSBoow1c8htCGHcx7BkW4';
-          const viewer = new Cesium.Viewer('cesiumContainer',{timeline: true,
-animation: true,});
+          const viewer = new Cesium.Viewer('cesiumContainer', {
+               timeline: true,
+               animation: true,
+          });
           viewer._cesiumWidget._creditContainer.style.display = "none";
 
 
-          // STEP 4 CODE (replaces steps 2 and 3)
-          // Keep your `Cesium.Ion.defaultAccessToken = 'your_token_here'` line from before here. 
-          //const viewer = new Cesium.Viewer('cesiumContainer');
-
-          //   const osmBuildings = viewer.scene.primitives.add(Cesium.createOsmBuildings());
 
           Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(63.076400, -31.700130, 139.064604, 52.234528);
 
           // The SampledPositionedProperty stores the position and timestamp for each sample along the radar sample series.
           const positionProperty = new Cesium.SampledPositionProperty();
           const positionProperty2 = new Cesium.SampledPositionProperty();
-
 
           var rotatioSpeed;
           var lastNow;
@@ -88,14 +88,12 @@ animation: true,});
 
 
 
-
           // viewer.trackedEntity = p0;
 
 
-
           var ttest;
-          var flightData = []
           var flightData1 = []
+
           var flightData2 = []
           //   viewer.trackedEntity = ppoint;
           var Launcher = [13.7259, 80.2266]
@@ -126,7 +124,7 @@ animation: true,});
           // console.log(getDistanceFromLatLonInKm([13.5993,100.5968],[9.1401,99.3331]))
 
 
-// https://stackoverflow.com/questions/42842607/cesiumjs-points-and-css-keyframe-animation << ANIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETIONNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+          // https://stackoverflow.com/questions/42842607/cesiumjs-points-and-css-keyframe-animation << ANIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEETIONNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 
 
           // const d = Cesium.Cartesian3.distance(new Cesium.Cartesian3(10470653.662, 15980600.791, 0.0), new Cesium.Cartesian3(11468313.524, 16934908.695, 0.0));
@@ -142,41 +140,32 @@ animation: true,});
           // console.log(calculateDistance(13.5993, 100.5968, 9.1401, 99.3331))
 
 
-          function testnaka() {
-                             
-               // Cesium.Viewer.animation(false);
-               // Cesium.Viewer.timeline(false);
-               // viewer._cesiumWidget._animation = false
-               // viewer._cesiumWidget._timeline = false
-               // console.log(viewer)
+          function showWitget() {
+
+               viewer.baseLayerPicker.container.style.visibility = "visible";
+               // viewer.sceneModePicker.container.style.visibility = "visible";
+               
+          
                viewer.animation.container.style.visibility = "visible";
                viewer.timeline.container.style.visibility = "visible";
           }
 
 
-          function testnakanaka() {
-                             
-                             // Cesium.Viewer.animation(false);
-                             // Cesium.Viewer.timeline(false);
-                             // viewer._cesiumWidget._animation = false
-                             // viewer._cesiumWidget._timeline = false
-                             // console.log(viewer)
-                             viewer.animation.container.style.visibility = "hidden";
-                              viewer.timeline.container.style.visibility = "hidden";
-                         //     viewer.render()
-                        }
-          
+          function hideWitget() {
+
+               
+               viewer.baseLayerPicker.container.style.visibility = "hidden";
+               // viewer.sceneModePicker.container.style.visibility = "hidden";
+               viewer.animation.container.style.visibility = "hidden";
+               viewer.timeline.container.style.visibility = "hidden";
+
+          }
+
           // Cesium.Viewer('cesiumContainer',{timeline: true,animation: true,});
 
-          // STEP 6 CODE (airplane entity)
-          async function loadModel() {
-               // viewer.destroy()
-               // viewer.Cesium.Viewer.animation(true)
-               // viewer.Cesium.Viewer.timeline(true)
-//                Cesium.CesiumWidget('',{timeline: true,
-// animation: true,})
 
-               flightData = []
+          async function loadModel() {
+
                flightData1 = []
                flightData2 = []
                ttest = [12.639053333333319, 83.23961333333331, 64800]
@@ -192,30 +181,19 @@ animation: true,});
                }
 
 
-
-
-
                var StartHeight = 45000.0
                var EndHeight = 200000.0
 
                var pointA = new Point(Launcher[0], Launcher[1], StartHeight);
                var pointB = new Point(Destination[0], Destination[1], EndHeight);
 
-               var pointC = new Point(Launcher[0], Launcher[1], StartHeight);
-               var pointD = new Point(Launcher[0], Launcher[1], StartHeight + 10000);
-
-
-               var pointX = new Point(Launcher[0], Launcher[1], StartHeight + 10000);
-
-
 
                var numberOfPoints = 20000;
-               var numberOfPoints2 = 100;
 
 
                for (var i = 0; i < numberOfPoints; i++) {
 
-                    flightData.push(new Point(
+                    flightData1.push(new Point(
                          ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
                          ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
                          ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
@@ -224,41 +202,31 @@ animation: true,});
 
 
 
-               // flightData.push(new Point(Launcher[0], Launcher[1], 0.0))
+               // flightData1.push(new Point(Launcher[0], Launcher[1], 0.0))
 
 
-               flightData.push(new Point(Launcher[0], Launcher[1], StartHeight), new Point(Launcher[0], Launcher[1], (StartHeight / 2)), new Point(Launcher[0], Launcher[1], 0.0))
+               flightData1.push(new Point(Launcher[0], Launcher[1], StartHeight), new Point(Launcher[0], Launcher[1], (StartHeight / 2)), new Point(Launcher[0], Launcher[1], 0.0))
 
 
 
 
-               console.log(flightData);
+               console.log(flightData1);
 
 
                const flightDatatest = []
 
                var timeStepInSeconds = 1;
-               const totalSeconds = timeStepInSeconds * (flightData.length - 1);
-
+               const totalSeconds = timeStepInSeconds * (flightData1.length - 1);
                const currentTime = Cesium.JulianDate.now();
-
-
                const start = Cesium.JulianDate.now();
-               // const start2 = Cesium.JulianDate.now();
-
                const stop = Cesium.JulianDate.addSeconds(start, totalSeconds, new Cesium.JulianDate());
-               // const stop2 = Cesium.JulianDate.addSeconds(start2, totalSeconds, new Cesium.JulianDate());
 
                viewer.clock.currentTime = currentTime;
                viewer.clock.startTime = start.clone();
-               // viewer.clock.startTime = start2.clone();
                viewer.clock.stopTime = stop.clone();
-               // viewer.clock.stopTime = stop2.clone();
-
                viewer.timeline.zoomTo(start, stop);
 
-
-               // Speed up the playback speed 50x.
+               // Speed up the playback speed 120x.
                viewer.clock.multiplier = 120;
                // Start playing the scene.
                viewer.clock.shouldAnimate = true;
@@ -267,39 +235,20 @@ animation: true,});
                var y = 0
                var z = 0
 
-               // Load the glTF model from Cesium ion.1167521
                const airplaneUri1 = await Cesium.IonResource.fromAssetId(1165688);
-               // const airplaneUri2 = await Cesium.IonResource.fromAssetId(1093026);
-               // const airplaneUri2 = await Cesium.IonResource.fromAssetId(1167521);
-
-
                const airplaneEntity = viewer.entities.add({
                     name: "ROCKET RUN RAN RUN",
                     description: `Location: (${positionProperty})`,
                     label: {
                          show: true
                     },
-
                     availability: new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({ start: start, stop: stop })]),
                     position: positionProperty,
-                    // Attach the 3D model instead of the green point.
                     model: { uri: airplaneUri1, minimumPixelSize: 50, maximumPixelSize: 50 },
-                    // Automatically compute the orientation from the position.
                     orientation: new Cesium.VelocityOrientationProperty(positionProperty),
                     path: new Cesium.PathGraphics({ width: 2, color: Cesium.Color.RED })
                });
 
-
-
-               // const airplaneEntity2 = viewer.entities.add({
-               //      availability: new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({ start: start2, stop: stop2 })]),
-               //      position: positionProperty2,
-               //      // Attach the 3D model instead of the green point.
-               //      model: { uri: airplaneUri2, minimumPixelSize: 50, maximumPixelSize: 50 },
-               //      // Automatically compute the orientation from the position.
-               //      orientation: new Cesium.VelocityOrientationProperty(positionProperty2),
-               //      path: new Cesium.PathGraphics({ width: 2 })
-               // });
 
 
                // viewer.trackedEntity = airplaneEntity;
@@ -309,9 +258,9 @@ animation: true,});
 
 
 
-               flightData = flightData.reverse();
-               for (let i = 0; i < flightData.length; i++) {
-                    let dataPoint = flightData[i]
+               flightData1 = flightData1.reverse();
+               for (let i = 0; i < flightData1.length; i++) {
+                    let dataPoint = flightData1[i]
                     const time = Cesium.JulianDate.addSeconds(start, i * timeStepInSeconds, new Cesium.JulianDate());
                     // const time2 = Cesium.JulianDate.addSeconds(start2, i * timeStepInSeconds, new Cesium.JulianDate());
 
@@ -457,10 +406,10 @@ animation: true,});
                               //console.log(list_radius[i])
                               let refer = Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, 0)
 
-                              var dis_real_alt = Cesium.Cartesian3.distance(Cesium.Cartesian3.fromDegrees(searchObj.long,searchObj.lat,searchObj.alt), Cesium.Cartesian3.fromDegrees(searchObj.long,searchObj.lat,altitude))
-                              var altitude = Math.sqrt(Math.pow(list_radius[i], 2) - Math.pow(refer.x - list_origin[i].x, 2) - Math.pow(refer.y - list_origin[i].y, 2) -  Math.pow(refer.z - list_origin[i].z, 2)) 
+                              var dis_real_alt = Cesium.Cartesian3.distance(Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, searchObj.alt), Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, altitude))
+                              var altitude = Math.sqrt(Math.pow(list_radius[i], 2) - Math.pow(refer.x - list_origin[i].x, 2) - Math.pow(refer.y - list_origin[i].y, 2) - Math.pow(refer.z - list_origin[i].z, 2))
                               //     let altitude = list_radius[i] - refer.x - list_origin[i].x - refer.y - list_origin[i].y
-  
+
                               //     var set_true_value_alt = searchObj.alt - altitude
                               //     altitude = Math.sqrt(Math.pow(list_radius[i],2) - Math.pow(refer.x - list_origin[i].x,2) - Math.pow(refer.y - list_origin[i].y,2)) + set_true_value_alt
 
@@ -471,24 +420,24 @@ animation: true,});
 
                               // if ((searchObj.alt - altitude) != 0) {
 
-                                   viewer.entities.add({
-                                        name: altitude,
-                                        position: Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, altitude),
-                                        point: {
-                                             pixelSize: 5,
-                                             color: Cesium.Color.GREEN,
-                                        },
-                                   });
-                                   // let mmm = Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, altitude)
-                                   // console.log(mmm)
-                                   // viewer.entities.add({
-                                   //      name: altitude,
-                                   //      position: Cesium.Cartesian3(mmm.y,mmm.x,mmm.z),
-                                   //      point: {
-                                   //           pixelSize: 5,
-                                   //           color: Cesium.Color.GREEN,
-                                   //      },
-                                   // });
+                              viewer.entities.add({
+                                   name: altitude,
+                                   position: Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, altitude),
+                                   point: {
+                                        pixelSize: 5,
+                                        color: Cesium.Color.GREEN,
+                                   },
+                              });
+                              // let mmm = Cesium.Cartesian3.fromDegrees(searchObj.long, searchObj.lat, altitude)
+                              // console.log(mmm)
+                              // viewer.entities.add({
+                              //      name: altitude,
+                              //      position: Cesium.Cartesian3(mmm.y,mmm.x,mmm.z),
+                              //      point: {
+                              //           pixelSize: 5,
+                              //           color: Cesium.Color.GREEN,
+                              //      },
+                              // });
 
                               // }
 
