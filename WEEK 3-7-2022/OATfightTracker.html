@@ -96,12 +96,12 @@
 
 
 
-          function Add(){
-               real_speed += 50.5 
+          function Add() {
+               real_speed += 50.5
                console.log(real_speed)
           }
           function Del() {
-               real_speed -= 0.5 
+               real_speed -= 0.5
                console.log(real_speed)
 
           }
@@ -166,8 +166,8 @@
 
                viewer.baseLayerPicker.container.style.visibility = "visible";
                // viewer.sceneModePicker.container.style.visibility = "visible";
-               
-          
+
+
                viewer.animation.container.style.visibility = "visible";
                viewer.timeline.container.style.visibility = "visible";
           }
@@ -175,7 +175,7 @@
 
           function hideWitget() {
 
-               
+
                viewer.baseLayerPicker.container.style.visibility = "hidden";
                // viewer.sceneModePicker.container.style.visibility = "hidden";
                viewer.animation.container.style.visibility = "hidden";
@@ -190,6 +190,7 @@
 
                flightData1 = []
                flightData2 = []
+
                ttest = [12.639053333333319, 83.23961333333331, 64800]
 
 
@@ -204,39 +205,56 @@
 
 
                var StartHeight = 45000.0
-               var EndHeight = 200000.0
+               var EndHeight = 400000.0
 
-               var pointA = new Point(Launcher[0], Launcher[1], StartHeight);
+               var pointA = new Point(Launcher[0], Launcher[1], StartHeight/1.25);
                var pointB = new Point(Destination[0], Destination[1], EndHeight);
 
 
-               var numberOfPoints = 20000;
+               var pointC = new Point(Launcher[0], Launcher[1], 0);
+               var pointD = new Point(Launcher[0], Launcher[1], StartHeight / 1.25);
 
+
+               var numberOfPoints = 20000;
+               var numberOfPoints2 = 2000;
+
+
+               // https://x-engineer.org/linear-interpolation-extrapolation-calculator/
 
                for (var i = 0; i < numberOfPoints; i++) {
 
-                    flightData1.push(new Point(
-                         ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
-                         ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
-                         ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
+                    if (i < 150) {
+
+                         flightData1.push(new Point(
+                              ((pointD.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
+                              ((pointD.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
+                              ((pointD.height - pointB.height) / numberOfPoints) * i + pointB.height));
+
+                    }
+                    else {
+                         flightData1.push(new Point(
+                              ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
+                              ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
+                              ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
+
+                    }
+               }
+
+               for (var i = 0; i < numberOfPoints2; i++) {
+
+                    flightData2.push(new Point(
+                         ((pointC.latitude - pointD.latitude) / numberOfPoints2) * i + pointD.latitude,
+                         ((pointC.longitude - pointD.longitude) / numberOfPoints2) * i + pointD.longitude,
+                         ((pointC.height - pointD.height) / numberOfPoints2) * i + pointD.height));
+
+                    flightData1.push(new Point(flightData2[i].latitude, flightData2[i].longitude, flightData2[i].height))
 
                }
 
-
-
-               // flightData1.push(new Point(Launcher[0], Launcher[1], 0.0))
-
-
-               flightData1.push(new Point(Launcher[0], Launcher[1], StartHeight), new Point(Launcher[0], Launcher[1], (StartHeight / 2)), new Point(Launcher[0], Launcher[1], 0.0))
-
-
-
-
                console.log(flightData1);
-
+               console.log(flightData2);
 
                const flightDatatest = []
-
                var timeStepInSeconds = 1;
                const totalSeconds = timeStepInSeconds * (flightData1.length - 1);
                const currentTime = Cesium.JulianDate.now();
@@ -319,14 +337,11 @@
 
                console.log(parseFloat(x), parseFloat(y), parseFloat(z))
 
-
-               //     console.log(oldPositionCartographics)
-               //     console.log(oldPositionCartographics.latitude,oldPositionCartographics.longitude,oldPositionCartographics.height)
+               // console.log(oldPositionCartographics)
+               // console.log(oldPositionCartographics.latitude,oldPositionCartographics.longitude,oldPositionCartographics.height)
                // console.log(timeStepInSeconds)
 
-
                display()
-
 
           };
           var realr = 0
