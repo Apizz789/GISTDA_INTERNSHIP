@@ -68,28 +68,28 @@
           // ----------------------------------------------------------------------------------------
           // Globe Rotation
           // ----------------------------------------------------------------------------------------
-          var real_speed = -0.0025
-          var rotatioSpeed;
-          var lastNow;
+          // var real_speed = -0.0025
+          // var rotatioSpeed;
+          // var lastNow;
 
-          function spinIt(scene, time) {
-               var now = Date.now();            
-               var spinRate = rotatioSpeed*viewer.clockViewModel.multiplier;
-               var delta = (now - lastNow) / 10000;
-               lastNow = now;
-               viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, spinRate * delta);
-          }
-          function spinGlobe(viewer) {
-               lastNow = Date.now();
-               viewer.scene.postRender.addEventListener(spinIt);
-          }
+          // function spinIt(scene, time) {
+          //      var now = Date.now();            
+          //      var spinRate = rotatioSpeed*viewer.clockViewModel.multiplier;
+          //      var delta = (now - lastNow) / 10000;
+          //      lastNow = now;
+          //      viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, spinRate * delta);
+          // }
+          // function spinGlobe(viewer) {
+          //      lastNow = Date.now();
+          //      viewer.scene.postRender.addEventListener(spinIt);
+          // }
 
-          function map(x, in_min, in_max, out_min, out_max) {
-               return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-          }
+          // function map(x, in_min, in_max, out_min, out_max) {
+          //      return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+          // }
 
-          rotatioSpeed = real_speed;
-          spinGlobe(viewer);
+          // rotatioSpeed = real_speed;
+          // spinGlobe(viewer);
           // ----------------------------------------------------------------------------------------
           // ----------------------------------------------------------------------------------------
 
