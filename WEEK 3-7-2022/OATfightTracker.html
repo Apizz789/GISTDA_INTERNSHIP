@@ -190,6 +190,7 @@
 
                flightData1 = []
                flightData2 = []
+               flightData3 = []
 
                ttest = [12.639053333333319, 83.23961333333331, 64800]
 
@@ -205,40 +206,67 @@
 
 
                var StartHeight = 45000.0
-               var EndHeight = 400000.0
+               var EndHeight = 200000.0
+               var ContinuationHeight = 35000
+               // var GenHeight = [45000,44500,43000,41000,38500,35000]
+               // var GenHeight = [35000, 38500, 41000, 43000, 44290, 45000, 45000]
+               var GenHeight = [35000,38500, 40700, 43000, 43500, 44090]
+               // var GenHeightR = GenHeight.reverse()
 
-               var pointA = new Point(Launcher[0], Launcher[1], StartHeight/1.25);
+
+               var pointZ = new Point(Launcher[0], Launcher[1], ContinuationHeight);
+               var pointA = new Point(Launcher[0], Launcher[1], StartHeight);
                var pointB = new Point(Destination[0], Destination[1], EndHeight);
 
 
                var pointC = new Point(Launcher[0], Launcher[1], 0);
-               var pointD = new Point(Launcher[0], Launcher[1], StartHeight / 1.25);
+               var pointD = new Point(Launcher[0], Launcher[1], 34900);
 
 
-               var numberOfPoints = 20000;
-               var numberOfPoints2 = 2000;
+               var numberOfPoints = 2500;
+               var numberOfPoints2 = 300;
 
 
                // https://x-engineer.org/linear-interpolation-extrapolation-calculator/
 
-               for (var i = 0; i < numberOfPoints; i++) {
 
-                    if (i < 150) {
+               for (var i = 8; i < numberOfPoints-8; i++) {
+                    flightData1.push(new Point(
+                         ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
+                         ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
+                         ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
 
-                         flightData1.push(new Point(
-                              ((pointD.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
-                              ((pointD.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
-                              ((pointD.height - pointB.height) / numberOfPoints) * i + pointB.height));
-
-                    }
-                    else {
-                         flightData1.push(new Point(
-                              ((pointA.latitude - pointB.latitude) / numberOfPoints) * i + pointB.latitude,
-                              ((pointA.longitude - pointB.longitude) / numberOfPoints) * i + pointB.longitude,
-                              ((pointA.height - pointB.height) / numberOfPoints) * i + pointB.height));
-
-                    }
                }
+
+               
+               for (var i = 0; i < GenHeight.length; i++) {
+                    flightData3.push(new Point(
+                         ((pointB.latitude - pointZ.latitude) / numberOfPoints) * i + pointZ.latitude,
+                         ((pointB.longitude - pointZ.longitude) / numberOfPoints) * i + pointZ.longitude,
+                         (GenHeight[i])));
+
+                  
+                         
+
+                    
+               }
+
+               flightData3.reverse()
+
+    
+               for (var i = 0; i < GenHeight.length; i++) {
+                    flightData1.push(new Point(flightData3[i].latitude, flightData3[i].longitude, flightData3[i].height))
+
+               }
+
+              
+
+     
+
+
+
+              
+
 
                for (var i = 0; i < numberOfPoints2; i++) {
 
@@ -248,10 +276,13 @@
                          ((pointC.height - pointD.height) / numberOfPoints2) * i + pointD.height));
 
                     flightData1.push(new Point(flightData2[i].latitude, flightData2[i].longitude, flightData2[i].height))
-
                }
 
+               // flightData2.push(new Point())
+
+
                console.log(flightData1);
+               console.log(flightData3);
                console.log(flightData2);
 
                const flightDatatest = []

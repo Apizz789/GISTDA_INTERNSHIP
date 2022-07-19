@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>GISTDA UTM</title>
+    <link rel = "icon" type = "image/png" href = "https://raw.githubusercontent.com/Apizz789/GISTDA_INTERNSHIP/main/PIC/astrolablogo.png">
     <!-- <link rel="stylesheet" href="style.css"> -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1011,19 +1012,31 @@
     }
 
     const main_animation = entities.add(new Cesium.Entity());
-    const dummy_animation = entities.add(new Cesium.Entity());
+    const dummy_waring_animation = entities.add(new Cesium.Entity());
+    const dummy_danger_animation = entities.add(new Cesium.Entity());
+    
+
 
     function show_cylinder_dangerZone() {
         main_animation.show = false;
-        dummy_animation.show = true;
-
+        dummy_danger_animation.show = true;
+        dummy_waring_animation.show = false
     }
 
-    function rev_show_cylinder() {
 
-        dummy_animation.show = false;
+    function show_cylinder_warningZone() {
+        main_animation.show = false;
+        dummy_danger_animation.show = false;
+        dummy_waring_animation.show = true;
+    }
+
+    
+
+    function show_cylinder() {
         main_animation.show = true;
-
+        dummy_danger_animation.show = false;
+        dummy_waring_animation.show = false
+        
     }
 
 
@@ -1179,26 +1192,68 @@
             console.log("D : " + d + " KM")
 
 
-
-            // if (d <= ((setRadians * 4) / 1000) && d > ((setRadians * 2) / 1000)) {
-
-
-            //     // let colRainbow = new Cesium.ColorMaterialProperty(fadeColor)
-            //     let colRainbow = Cesium.Color.ORAEGE
-            //     // var colRainbow = Cesium.Color.fromAlpha(Cesium.Color.ORAEGE, 0.9)
-            //     console.log("WARING WARING")
-            //     greenCylinder1.cylinder.material.color.setValue(Cesium.Color.ORAEGE)
-            //     // greenCylinder1.cylinder.outline.setValue(true)
-            //     // greenCylinder1.cylinder.outlineColor.color.setValue(Cesium.Color.DARK_ORAEGE)
-            //     greenCylinder2.cylinder.material.color.setValue(Cesium.Color.ORAEGE)
-
-            // }else 
-
             var colRed = Cesium.Color.RED.withAlpha(0.5)
-            if (d < ((setRadians * 2) / 1000)) {
+            var colGold= Cesium.Color.GOLD.withAlpha(0.5)
+            if (d < ((setRadians * 4) / 1000) && d > ((setRadians * 2) / 1000)) {
 
                 entities.add({
-                    parent: dummy_animation,
+                    parent: dummy_waring_animation,
+                    label: {
+                        id: 'my 3D label',
+                        text: 'TDN308',
+                        // pixelOffset: new Cesium.Cartesian2(0.0, 20),
+                        font: '10px Helvetica',
+                        verticalOrigin: Cesium.VerticalOrigin.TOP,
+                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    },
+                    name: "GOLD cylinder with black outline NO. 1",
+                    position: positionProperty1,
+                    orientation: new Cesium.VelocityOrientationProperty(positionProperty1),
+                    cylinder: {
+                        length: setHeight,
+                        topRadius: setRadians,
+                        bottomRadius: setRadians,
+                        material: Cesium.Color.GOLD.withAlpha(0.5),
+                        outline: true,
+                        outlineColor: Cesium.Color.DARK_RED,
+                        minimumPixelSize: 750, maximumPixelSize: 750,
+                    },
+                });
+
+
+                entities.add({
+                    parent: dummy_waring_animation,
+                    label: {
+                        id: 'my 3D label',
+                        text: 'TDN048',
+                        // pixelOffset: new Cesium.Cartesian2(0.0, 20),
+                        font: '10px Helvetica',
+                        verticalOrigin: Cesium.VerticalOrigin.TOP,
+                        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                    },
+                    name: "GOLD cylinder with black outline NO. 2",
+                    position: positionProperty2,
+                    orientation: new Cesium.VelocityOrientationProperty(positionProperty2),
+                    cylinder: {
+                        length: setHeight,
+                        topRadius: setRadians,
+                        bottomRadius: setRadians,
+                        material: Cesium.Color.GOLD.withAlpha(0.5),
+                        outline: true,
+                        outlineColor: Cesium.Color.DARK_RED,
+                        minimumPixelSize: 750, maximumPixelSize: 750,
+                    },
+                });
+
+
+                show_cylinder_warningZone()
+                console.log("WARING WARING")
+
+
+            }else if (d < ((setRadians * 2) / 1000)) {
+
+                entities.add({
+                    parent: dummy_danger_animation,
                     label: {
                         id: 'my 3D label',
                         text: 'TDN308',
@@ -1223,7 +1278,7 @@
 
 
                 entities.add({
-                    parent: dummy_animation,
+                    parent: dummy_danger_animation,
                     label: {
                         id: 'my 3D label',
                         text: 'TDN048',
@@ -1248,15 +1303,9 @@
 
                 show_cylinder_dangerZone();
 
-
-                // greenCylinder1.cylinder.material.color.setValue(Cesium.Color.RED)
-                // main_animation.cylinder.material.color.setValue(colRed)
-
-                // greenCylinder2.cylinder.material.color.setValue(colRed)
-
                 console.log("JER LAEW")
             } else {
-                rev_show_cylinder();
+                show_cylinder();
 
             }
 
